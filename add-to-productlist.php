@@ -14,7 +14,7 @@ if (isset($_POST["submit"]))
     $tmp_name = $_FILES["front_image"]["tmp_name"];
     move_uploaded_file($front_image, "upload/".$front_image);
 
-    $insert = "INSERT INTO footwear_info(product_name, product_category, price, size, color, front_image/* , back_image */) VALUE('$product_name', '$product_category', '$price', '$size', '$color', '$front_image'/* , '$back_image' */)";
+    $insert = "INSERT INTO footwear_info(product_name, product_category, price, size, color, front_image/* , back_image */) VALUES('$product_name', '$product_category', '$price', '$size', '$color', '$front_image'/* , '$back_image' */)";
 
     $insert_to_database = mysqli_query($connect, $insert) or die("Cannot insert to table".mysqli_connect_error());
 
@@ -31,7 +31,7 @@ if (isset($_POST["submit"]))
     <link rel="stylesheet" href="add-to-productlist.css">
 </head>
 <body>
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
         <div class="product_main_body">
             <div>
                 <label for="product_name">
