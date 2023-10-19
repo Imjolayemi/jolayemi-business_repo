@@ -1,13 +1,105 @@
-body {
+/* Apply a reset to remove default margin and padding */
+* {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #212529;
-    text-align: left;
-    background-color: #fff; }
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    .product_main_body{
-        border: ;
+/* Set a background color and text color for the body */
+body {
+    background-color: #f4f4f4;
+    color: #333;
+    font-family: Arial, sans-serif;
+}
+
+.entire_page {
+    display: flex;
+    flex-direction: column;
+    margin: 20px; /* Add moderate margin to the entire page */
+}
+
+/* Style the form container */
+.product_main_body {
+    max-width: 600px;
+    /* margin: 0 auto; */
+    padding: 20px;
+    background-image: url(images/about.jpg); /* Specify the path to your image */
+    background-size: cover; /* Adjust this property as needed */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px); /* Add a blur effect to the background */
+    color: white; /* Text color for better readability */
+    display: inline-block; /* Display divs inside product_main_body side by side */
+    vertical-align: top; /* Align them to the top of the container */
+    margin: 20px 20px; /* Add spacing between divs (adjust the value as needed) */
+}
+
+.retrieve_table {
+    clear: both; /* Ensure the retrieve table starts below the floated divs */
+}
+
+/* Style the table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto; /* Add some space around the table and center it horizontally */
+}
+
+th, td {
+    border: 1px solid #dddddd; /* Add borders to table cells */
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2; /* Add a background color to even rows */
+}
+
+
+/* Style form labels */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+/* Style form inputs */
+input[type="text"], input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Style form submit buttons */
+input[type="submit"] {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Add spacing between form elements */
+div {
+    margin-bottom: 20px;
+}
+
+/* Style images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+    .product_main_body {
+        width: 90%;
     }
+}
