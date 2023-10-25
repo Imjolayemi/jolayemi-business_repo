@@ -8,6 +8,7 @@ if (isset($_POST["add"]))
     $price = (isset($_POST["price"])) ? $_POST["price"] : "";
     $size = (isset($_POST["size"])) ? $_POST["size"] : "";
     $color = (isset($_POST["color"])) ? $_POST["color"] : "";
+    $style = (isset($_POST["style"])) ? $_POST["style"] : "";
 
     $front_image = $_FILES["front_image"]["name"];
     $front_image_size = $_FILES["front_image"]["size"];
@@ -19,15 +20,9 @@ if (isset($_POST["add"]))
     $back_tmp_name = $_FILES["back_image"]["tmp_name"];
     move_uploaded_file($back_tmp_name, "upload/".$back_image);
 
-    $insert = "INSERT INTO footwear_info(product_name, product_category, price, size, color, front_image, back_image) VALUES('$product_name', '$product_category', '$price', '$size', '$color', '$front_image', '$back_image')";
+    $insert = "INSERT INTO footwear_info(product_name, product_category, price, size, color, front_image, back_image, style) VALUES('$product_name', '$product_category', '$price', '$size', '$color', '$front_image', '$back_image', '$style')";
 
     $insert_to_database = mysqli_query($connect, $insert) or die("Cannot insert to table".mysqli_connect_error());
-
-    if ($insert_to_database)
-    {
-        print "<script> alert 'Successfully inserted product';</script>";
-    }
-
 }
 
 function retrieve_table()
@@ -40,7 +35,7 @@ function retrieve_table()
     if (isset($_POST["retrieve"])) {
         echo '<h2>Product List</h2>';
         echo '<table border="1">';
-        echo '<tr><th>ID</th><th>Product Name</th><th>Category</th><th>Price</th><th>Size</th><th>Color</th><th>Front Image</th><th>Back Image</th></tr>';
+        echo '<tr><th>ID</th><th>Product Name</th><th>Category</th><th>Price</th><th>Size</th><th>Color</th><th>Style</th><th>Front Image</th><th>Back Image</th></tr>';
         while ($row = mysqli_fetch_assoc($retrieve_from_database)) {
             echo '<tr>';
             echo '<td>' . $row['ID'] . '</td>';
@@ -49,8 +44,9 @@ function retrieve_table()
             echo '<td>' . $row['price'] . '</td>';
             echo '<td>' . $row['size'] . '</td>';
             echo '<td>' . $row['color'] . '</td>';
-            echo '<td><img src="upload/' . $row['front_image'] . '" width="100" height="100"></td>';
-            echo '<td><img src="upload/' . $row['back_image'] . '" width="100" height="100"></td>';
+            echo '<td>' . $row['style'] . '</td>';
+            echo '<td><img src="upload/' . $row['front_image'] . '" width="150px" height="150px"></td>';
+            echo '<td><img src="upload/' . $row['back_image'] . '" width="150px" height="150px"></td>';
             echo '</tr>';
         }
         echo '</table>';
@@ -82,14 +78,7 @@ mysqli_close($connect);
                 </label>
                 <input type="text" name="product_name" id="">
             </div>
-            <div>
-                <label for="product_category">
-                    <p>
-                        Product-Category:
-                    </p>
-                </label>
-                <input type="text" name="product_category" id="">
-            </div>
+            
             <div>
                 <label for="price">
                     <p>
@@ -115,6 +104,27 @@ mysqli_close($connect);
                 <input type="text" name="color" id="">
             </div>
             <div>
+                <label for="style">
+                    <p>
+                        Style:
+                    </p>
+                </label>
+                <input type="text" name="style" id="">
+            </div>
+            <div>
+                <label for="product_category">
+                    <p>
+                        Product-Category:
+                    </p>
+                </label>
+                <select name="product_category" id="">
+                    <option value="">Select the product category</option>
+                    <option value="men<">Men</option>
+                    <option value="women">Women</option>
+                    <option value="kid">Kid</option>
+                </select>
+            </div>
+            <div>
                 <label for="front_image">
                     <p>
                         Front-Image:
@@ -130,6 +140,7 @@ mysqli_close($connect);
                 </label>
                 <input type="file" name="back_image" id="back_image">
             </div><br>
+
             <div>
                 <input type="submit" value="ADD TO PRODUCT LIST" name="add">
             </div> <br>

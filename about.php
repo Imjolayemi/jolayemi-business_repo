@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-	<title>Footwear - Free Bootstrap 4 Template by Colorlib</title>
+	<title>About Us Page</title>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -35,6 +35,24 @@
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="css/style.css">
 
+	<style>
+		.remv-marg
+		{
+			margin: -5rem 0px -7rem 0px;
+		}
+
+		.remv-marg1
+		{
+			margin: -15rem 0px -7rem 0px;
+		}
+
+		h2
+		{
+			text-align: center;
+		}
+		
+	</style>
+
 	</head>
 	<body>
 		
@@ -46,7 +64,7 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-7 col-md-9">
-							<div id="colorlib-logo"><a href="index.html">Jolayemi Footwear</a></div>
+							<div id="colorlib-logo"><a href="index.php">Jolayemi Footwear</a></div>
 						</div>
 						<div class="col-sm-5 col-md-3">
 			            <form action="#" class="search-wrap">
@@ -60,9 +78,9 @@
 					<div class="row">
 						<div class="col-sm-12 text-left menu-1">
 							<ul>
-								<li><a href="index.html">Home</a></li>
+								<li><a href="index.php">Home</a></li>
 								<li class="has-dropdown">
-									<a href="men.html">Men</a>
+									<a href="men.php">Men</a>
 									<ul class="dropdown">
 										<li><a href="product-detail.html">Product Detail</a></li>
 										<li><a href="cart.html">Shopping Cart</a></li>
@@ -71,33 +89,30 @@
 										<li><a href="add-to-wishlist.html">Wishlist</a></li>
 									</ul>
 								</li>
-								<li><a href="women.html">Women</a></li>
-								<li class="active"><a href="about.html">About</a></li>
-								<li><a href="contact.html">Contact</a></li>
-								<li class="cart"><a href="cart.html"><i class="icon-shopping-cart"></i> Cart [0]</a></li>
+								<li class="has-dropdown">
+									<a href="women.php">Women</a>
+									<ul class="dropdown">
+										<li><a href="product-detail.html">Product Detail</a></li>
+										<li><a href="cart.html">Shopping Cart</a></li>
+										<li><a href="checkout.html">Checkout</a></li>
+										<li><a href="order-complete.html">Order Complete</a></li>
+										<li><a href="add-to-wishlist.html">Wishlist</a></li>
+									</ul>
+								</li>
+								<li class="has-dropdown">
+									<a href="kid.php">Kids</a>
+									<ul class="dropdown">
+										<li><a href="product-detail.html">Product Detail</a></li>
+										<li><a href="cart.html">Shopping Cart</a></li>
+										<li><a href="checkout.html">Checkout</a></li>
+										<li><a href="order-complete.html">Order Complete</a></li>
+										<li><a href="add-to-wishlist.html">Wishlist</a></li>
+									</ul>
+								</li>
+								<li class="active"><a href="about.php">About</a></li>
+								<li><a href="contact.php">Contact</a></li>
+								<li class="cart"><a href="cart.php"><i class="icon-shopping-cart"></i> Cart [0]</a></li>
 							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="sale">
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-8 offset-sm-2 text-center">
-							<div class="row">
-								<div class="owl-carousel2">
-									<div class="item">
-										<div class="col">
-											<h3><a href="#">25% off (Almost) Everything! Use Code: Summer Sale</a></h3>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col">
-											<h3><a href="#">Our biggest sale yet 50% off all summer shoes</a></h3>
-										</div>
-									</div>
-								</div>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -114,8 +129,7 @@
 			</div>
 		</div>
 
-
-		<div class="colorlib-about">
+		<div class="colorlib-about remv-marg">
 			<div class="container">
 				<div class="row row-pb-lg">
 					<div class="col-sm-6 mb-3">
@@ -126,12 +140,47 @@
 					</div>
 					<div class="col-sm-6">
 						<div class="about-wrap">
-							<h2>Footwear the leading eCommerce Store around the Globe</h2>
-							<p>The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way.</p>
-							<p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then she continued her way.</p>
+								<h2>About Jolayemi Footwear Empire</h2>
+
+								<p>Welcome to Jolayemi Footwear Empire, where every step is a statement! We're not just a shoe store; we're a destination for fashion enthusiasts and footwear aficionados. Our journey began with a passion for footwear and a dream to provide people with the perfect pair for every occasion.</p>
+
+								<h2>Our Mission</h2>
+
+								<p> At Jolayemi Footwear Empire, our mission is clear: to help you put your best foot forward. We believe that the right pair of shoes can transform an outfit, boost your confidence, and tell a unique story about your style. Our goal is to curate an extensive collection of high-quality footwear that complements your individuality.</p>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<h2>What Sets Us Apart</h2>
+
+						<p> What makes Jolayemi Footwear Empire stand out is our commitment to delivering a diverse range of footwear that suits every taste, need, and budget. From trendy sneakers to elegant formal shoes and everything in between, we take pride in offering a selection that caters to various styles and preferences.</p>
+
+						<h2>Our Team</h2>
+
+						<p> Behind every pair of shoes we offer is a team of dedicated individuals who are passionate about footwear and customer satisfaction. Our team is driven by a shared belief in the power of exceptional footwear to elevate your everyday experiences.</p>
+					</div>
+					<div class="col-sm-6">
+						<div class="about-wrap">
+
+							<h2>Quality and Craftsmanship </h2>
+
+							<p> We understand the importance of quality, comfort, and style. That's why we partner with some of the best manufacturers to ensure that each shoe we sell is a testament to fine craftsmanship and exceptional materials. You can trust that every shoe you find at Jolayemi Footwear Empire is designed to make you look and feel your best.</p>
+
+							<h2>Our Commitment to You</h2>
+
+							<p>Jolayemi Footwear Empire is more than a shoe store; it's a reflection of our commitment to providing you with a seamless shopping experience. Whether you're looking for the perfect pair for a special occasion or everyday wear, we're here to assist you every step of the way.</p>
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+
+		<div class="colorlib-about remv-marg1">
+			<div class="container">
+				<h2>Join Us on Our Journey</h2>
+
+				<p>We invite you to join us on this exciting journey through the world of footwear. Whether you're a seasoned shoe collector, a fashion enthusiast, or someone in search of the ideal pair, we welcome you to explore our collection, find the perfect fit, and be a part of the Jolayemi Footwear Empire family.</p> 
+
+				<p>Thank you for choosing Jolayemi Footwear Empire. Your style, your journey, your footwear – it all begins here.</p>
 			</div>
 		</div>
 

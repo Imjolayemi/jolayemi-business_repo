@@ -1,7 +1,24 @@
+<?php
+$connect = include 'database_connection.php';
+
+if (isset($_POST["add"]))
+{
+    $fname = (isset($_POST["fname"])) ? $_POST["fname"] : "";
+    $lname = (isset($_POST["lname"])) ? $_POST["lname"] : "";
+    $mail = (isset($_POST["mail"])) ? $_POST["mail"] : "";
+    $subject = (isset($_POST["subject"])) ? $_POST["subject"] : "";
+    $message = (isset($_POST["message"])) ? $_POST["message"] : "";
+
+    $put_in = "INSERT INTO contact_info(first_name, last_name, email, mail_subject, mail_message) VALUES('$fname', '$lname', '$mail', '$subject', '$message')";
+
+    $insert_to_database = mysqli_query($connect, $put_in) or die("Cannot insert to table".mysqli_connect_error());
+}
+?>
+
 <!DOCTYPE HTML>
 <html>
 	<head>
-	<title>Footwear - Free Bootstrap 4 Template by Colorlib</title>
+	<title>Contact Page</title>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -46,9 +63,15 @@
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="css/style.css">
 
+    <style>
+		.remv-marg
+		{
+			margin: -3rem 0px -7rem 0px;
+		}
+	</style>
+
 	</head>
 	<body>
-		
 	<div class="colorlib-loader"></div>
 
 	<div id="page">
@@ -57,7 +80,7 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-7 col-md-9">
-							<div id="colorlib-logo"><a href="index.html">Jolayemi Footwear</a></div>
+							<div id="colorlib-logo"><a href="index.php">Jolayemi Footwear</a></div>
 						</div>
 						<div class="col-sm-5 col-md-3">
 			            <form action="#" class="search-wrap">
@@ -71,9 +94,9 @@
 					<div class="row">
 						<div class="col-sm-12 text-left menu-1">
 							<ul>
-								<li><a href="index.html">Home</a></li>
+								<li><a href="index.php">Home</a></li>
 								<li class="has-dropdown">
-									<a href="men.html">Men</a>
+									<a href="men.php">Men</a>
 									<ul class="dropdown">
 										<li><a href="product-detail.html">Product Detail</a></li>
 										<li><a href="cart.html">Shopping Cart</a></li>
@@ -82,10 +105,30 @@
 										<li><a href="add-to-wishlist.html">Wishlist</a></li>
 									</ul>
 								</li>
-								<li><a href="women.html">Women</a></li>
-								<li><a href="about.html">About</a></li>
-								<li class="active"><a href="contact.html">Contact</a></li>
-								<li class="cart"><a href="cart.html"><i class="icon-shopping-cart"></i> Cart [0]</a></li>
+                                <li class="has-dropdown">
+									<a href="women.php">Women</a>
+									<ul class="dropdown">
+										<li><a href="product-detail.html">Product Detail</a></li>
+										<li><a href="cart.html">Shopping Cart</a></li>
+										<li><a href="checkout.html">Checkout</a></li>
+										<li><a href="order-complete.html">Order Complete</a></li>
+										<li><a href="add-to-wishlist.html">Wishlist</a></li>
+									</ul>
+								</li>
+                                <li class="has-dropdown">
+									<a href="kid.php">Kids</a>
+									<ul class="dropdown">
+										<li><a href="product-detail.html">Product Detail</a></li>
+										<li><a href="cart.html">Shopping Cart</a></li>
+										<li><a href="checkout.html">Checkout</a></li>
+										<li><a href="order-complete.html">Order Complete</a></li>
+										<li><a href="add-to-wishlist.html">Wishlist</a></li>
+									</ul>
+								</li>
+						
+								<li><a href="about.php">About</a></li>
+								<li class="active"><a href="contact.php">Contact</a></li>
+								<li class="cart"><a href="cart.php"><i class="icon-shopping-cart"></i> Cart [0]</a></li>
 							</ul>
 						</div>
 					</div>
@@ -99,12 +142,12 @@
 								<div class="owl-carousel2">
 									<div class="item">
 										<div class="col">
-											<h3><a href="#">25% off (Almost) Everything! Use Code: Summer Sale</a></h3>
+										
 										</div>
 									</div>
 									<div class="item">
 										<div class="col">
-											<h3><a href="#">Our biggest sale yet 50% off all summer shoes</a></h3>
+											
 										</div>
 									</div>
 								</div>
@@ -126,20 +169,20 @@
 		</div>
 
 
-		<div id="colorlib-contact">
+		<div id="colorlib-contact remv-marg">
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-12">
 						<h3>Contact Information</h3>
 						<div class="row contact-info-wrap">
 							<div class="col-md-3">
-								<p><span><i class="icon-location"></i></span> 198 West 21th Street, <br> Suite 721 New York NY 10016</p>
+								<p><span><i class="icon-location"></i></span> 103 Akindeko hostel, <br> Federal University Of Technology Akure. FUTA 340106</p>
 							</div>
 							<div class="col-md-3">
-								<p><span><i class="icon-phone3"></i></span> <a href="tel://1234567920">+ 1235 2355 98</a></p>
+								<p><span><i class="icon-phone3"></i></span> <a href="tel://1234567920">+234 813 090 6009</a></p>
 							</div>
 							<div class="col-md-3">
-								<p><span><i class="icon-paperplane"></i></span> <a href="mailto:info@yoursite.com">info@yoursite.com</a></p>
+								<p><span><i class="icon-paperplane"></i></span> <a href="mailto:info@yoursite.com">jolayemiempire@gmail.com</a></p>
 							</div>
 							<div class="col-md-3">
 								<p><span><i class="icon-globe"></i></span> <a href="#">yoursite.com</a></p>
@@ -151,32 +194,32 @@
 					<div class="col-md-6">
 						<div class="contact-wrap">
 							<h3>Get In Touch</h3>
-							<form action="#" class="contact-form">
+							<form action="" method="post" enctype="multipart/form-data">
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="fname">First Name</label>
-											<input type="text" id="fname" class="form-control" placeholder="Your firstname">
+											<input type="text" name="fname" id="fname" class="form-control" placeholder="Your firstname">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="lname">Last Name</label>
-											<input type="text" id="lname" class="form-control" placeholder="Your lastname">
+											<input type="text" name="lname" id="lname" class="form-control" placeholder="Your lastname">
 										</div>
 									</div>
 									<div class="w-100"></div>
 									<div class="col-sm-12">
 										<div class="form-group">
-											<label for="email">Email</label>
-											<input type="text" id="email" class="form-control" placeholder="Your email address">
+											<label for="mail">Email</label>
+											<input type="email" name="mail" id="mail" class="form-control" placeholder="Your email address">
 										</div>
 									</div>
 									<div class="w-100"></div>
 									<div class="col-sm-12">
 										<div class="form-group">
 											<label for="subject">Subject</label>
-											<input type="text" id="subject" class="form-control" placeholder="Your subject of this message">
+											<input type="text" name="subject" id="subject" class="form-control" placeholder="Your subject of this message">
 										</div>
 									</div>
 									<div class="w-100"></div>
@@ -189,7 +232,7 @@
 									<div class="w-100"></div>
 									<div class="col-sm-12">
 										<div class="form-group">
-											<input type="submit" value="Send Message" class="btn btn-primary">
+											<input type="submit" value="Send Message" class="btn btn-primary" name="add" id="add">
 										</div>
 									</div>
 								</div>
@@ -301,7 +344,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="js/google_map.js"></script>
 	<!-- Main -->
 	<script src="js/main.js"></script>
-
+    
 	</body>
 </html>
 

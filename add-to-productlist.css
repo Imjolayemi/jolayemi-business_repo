@@ -64,7 +64,7 @@ label {
 }
 
 /* Style form inputs */
-input[type="text"], input[type="file"] {
+input[type="text"], input[type="file"], select {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;

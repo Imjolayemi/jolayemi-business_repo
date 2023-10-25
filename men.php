@@ -1,15 +1,17 @@
 <?php
-$connect = include 'database_connection.php';
-$retrieve = "SELECT * FROM footwear_info";
-$qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_connect_error());
+function query($retrieve)
+{
+	$connect = include 'database_connection.php';
+	/* $retrieve = "SELECT * FROM footwear_info WHERE product_category = 'men'"; */
+	$qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_connect_error());
+	return $qry;
+}
 ?>
 
-
-<!-- HTML   PAGE -->
 <!DOCTYPE HTML>
 <html>
 	<head>
-	<title>Jolayemi Footwear</title>
+	<title>Men Page</title>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -75,8 +77,8 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
 					<div class="row">
 						<div class="col-sm-12 text-left menu-1">
 							<ul>
-								<li class="active"><a href="index.php">Home</a></li>
-								<li class="has-dropdown">
+								<li><a href="index.php">Home</a></li>
+								<li class="has-dropdown active">
 									<a href="men.php">Men</a>
 									<ul class="dropdown">
 										<li><a href="product-detail.html">Product Detail</a></li>
@@ -86,6 +88,7 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
 										<li><a href="add-to-wishlist.html">Wishlist</a></li>
 									</ul>
 								</li>
+
 								<li class="has-dropdown">
 									<a href="Women.php">Women</a>
 									<ul class="dropdown">
@@ -106,6 +109,7 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
 										<li><a href="add-to-wishlist.html">Wishlist</a></li>
 									</ul>
 								</li>
+
 								<li><a href="about.php">About</a></li>
 								<li><a href="contact.php">Contact</a></li>
 								<li class="cart"><a href="cart.php"><i class="icon-shopping-cart"></i> Cart [0]</a></li>
@@ -114,166 +118,143 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
 					</div>
 				</div>
 			</div>
-
+			
 		</nav>
-		<aside id="colorlib-hero">
-			<div class="flexslider">
-				<ul class="slides">
 
-					<li style="background-image: url(images/img_bg_1.jpg);">
-						<div class="overlay"></div>
-						<div class="container-fluid">
-							<div class="row">
-								<div class="col-sm-6 offset-sm-3 text-center slider-text">
-									<div class="slider-text-inner">
-										<div class="desc">
-											<h1 class="head-1">Men's</h1>
-											<h2 class="head-2">Shoes</h2>
-											<h2 class="head-3">Collection</h2>
-											<p class="category"><span>Men's New trending shoes</span></p>
-											<p><a href="#" class="btn btn-primary">Shop Collection</a></p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</li>
-
-					<li style="background-image: url(images/img_bg_2.jpg);">
-						<div class="overlay"></div>
-						<div class="container-fluid">
-							<div class="row">
-								<div class="col-sm-6 offset-sm-3 text-center slider-text">
-									<div class="slider-text-inner">
-										<div class="desc">
-											<h1 class="head-1">Women's</h1>
-											<h2 class="head-2">Shoes</h2>
-											<h2 class="head-3">Collection</h2>
-											<p class="category"><span>Women's New trending shoes</span></p>
-											<p><a href="#" class="btn btn-primary">Shop Collection</a></p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</li>
-					
-					<li style="background-image: url(images/item-1.jpg);">
-						<div class="overlay"></div>
-						<div class="container-fluid">
-							<div class="row">
-								<div class="col-sm-6 offset-sm-3 text-center slider-text">
-									<div class="slider-text-inner">
-										<div class="desc">
-											<h1 class="head-1">Kid's</h1>
-											<h2 class="head-2">Shoes</h2>
-											<h2 class="head-3">Collection</h2>
-											<p class="category"><span>Kid's New trending shoes</span></p>
-											<p><a href="#" class="btn btn-primary">Shop Collection</a></p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</li>
-
-					<li style="background-image: url(images/img_bg_3.jpg);">
-						<div class="overlay"></div>
-						<div class="container-fluid">
-							<div class="row">
-								<div class="col-sm-6 offset-sm-3 text-center slider-text">
-									<div class="slider-text-inner">
-										<div class="desc">
-											<h1 class="head-1">New</h1>
-											<h2 class="head-2">Arrival</h2>
-											<h2 class="head-3">up to <strong class="font-weight-bold">30%</strong> off</h2>
-											<p class="category"><span>New stylish shoes for men</span></p>
-											<p><a href="#" class="btn btn-primary">Shop Collection</a></p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</li>
-
-			  	</ul>
-		  	</div>
-		</aside>
-		
-		<div class="colorlib-product">
-			<div class="container-fluid">
+		<div class="breadcrumbs">
+			<div class="container">
 				<div class="row">
-					<div class="col-sm-6 text-center">
-						<div class="featured">
-							<a href="#" class="featured-img" style="background-image: url(images/men.jpg);"></a>
-							<div class="desc">
-								<h2><a href="#">Shop Men's Collection</a></h2>
-							</div>
-						</div>
+					<div class="col">
+						<p class="bread"><span><a href="index.php">Home</a></span> / <span>Men</span></p>
 					</div>
+				</div>
+			</div>
+		</div>
 
-					<div class="col-sm-6 text-center">
-						<div class="featured">
-							<a href="#" class="featured-img" style="background-image: url(images/women.jpg);"></a>
-							<div class="desc">
-								<h2><a href="#">Shop Women's Collection</a></h2>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-sm-6 text-center">
-						<div class="featured">
-							<a href="#" class="featured-img" style="background-image: url(images/item-3.jpg);"></a>
-							<div class="desc">
-								<h2><a href="#">Shop Kid's Collection</a></h2>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-sm-6 text-center">
-						<div class="featured">
-							<a href="#" class="featured-img" style="background-image: url(images/Wrist-watch0.jpg);"></a>
-							<div class="desc">
-								<h2><a href="#">Shop Wrist-watch Collection</a></h2>
-							</div>
+		<div class="breadcrumbs-two">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<div class="breadcrumbs-img" style="background-image: url(images/item-9.jpg);">
+							<h2>Men's</h2>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
+
+
 		<div class="colorlib-product">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-8 offset-sm-2 text-center colorlib-heading">
-						<h2>Best Sellers</h2>
+					<div class="col-lg-3 col-xl-3">
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="side border mb-1">
+									<h3>Brand</h3>
+									<ul>
+									<?php
+									$retrieve = "SELECT DISTINCT product_name FROM footwear_info WHERE product_category = 'men' ORDER BY product_name";
+									$query = query($retrieve);
+									
+                            		while($row  = mysqli_fetch_array($query)){
+										$product = $row['product_name'];
+                        			?>
+										<li><a href="#"><?php echo $product; ?></a></li>
+									<?php } ?>
+									</ul>
+									
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="side border mb-1">
+									<h3>Size/Width</h3>
+									<div class="block-26 mb-2">
+										<h4>Size</h4>
+										<ul>
+										<?php
+											$retrieve = "SELECT DISTINCT size FROM footwear_info WHERE product_category = 'men' ORDER BY size";
+											$query = query($retrieve);
+											
+											while($row  = mysqli_fetch_array($query)){
+												$size = $row['size'];
+											?>
+											<li><a href="#"><?php echo $size; ?></a></li>
+											<?php } ?>
+										</ul>
+					            	</div>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="side border mb-1">
+									<h3>Style</h3>
+									<ul>
+										<?php
+											$retrieve = "SELECT DISTINCT style FROM footwear_info WHERE product_category = 'men' ORDER BY style";
+											$query = query($retrieve);
+											
+											while($row  = mysqli_fetch_array($query)){
+												$stle = $row['style'];
+											?>
+											<li><a href="#"><?php echo $stle; ?></a></li>
+										<?php } ?>
+									</ul>
+								</div>
+							</div>
+							<div class="col-sm-12">
+								<div class="side border mb-1">
+									<h3>Colors</h3>
+									<ul>
+									<?php
+											$retrieve = "SELECT DISTINCT color FROM footwear_info WHERE product_category = 'men' ORDER BY color";
+											$query = query($retrieve);
+											
+											while($row  = mysqli_fetch_array($query)){
+												$color = $row['color'];
+											?>
+											<li><a href="#"><?php echo $color; ?></a></li>
+											<?php } ?>
+									</ul>
+								</div>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div class="row row-pb-md">
-                    <?php 
-                            while($row  = mysqli_fetch_array($qry)){
-                    ?>
-                        <div class="col-lg-3 mb-4 text-center">
-                            
-
-                            <div class="product-entry border">
-                                <a href="#" class="prod-img">
+					<div class="col-lg-9 col-xl-9">
+						<div class="row row-pb-md">
+                        <?php
+							$retrieve = "SELECT * FROM footwear_info WHERE product_category = 'men'";
+							$query = query($retrieve);
+								while($row = mysqli_fetch_array($query)){
+                        ?>
+							<div class="col-lg-4 mb-4 text-center">
+								<div class="product-entry border">
+									<a href="#" class="prod-img">
                                     <?php echo '
                                     <img src="upload/'.$row['front_image'].'" class="img-fluid" id="image">';?>
-                                </a>
-                                <div class="desc">
-                                    <h2><a href="#"><?php echo $row['product_name'];?></a></h2>
-                                    <span class="price"><?php echo '#'. $row['price'];?></span>
-                                </div>
-                            </div>
-                        
-                        </div>
-                    <?php } ?>
-					
-				</div>
-				<div class="row">
-					<div class="col-md-12 text-center">
-						<p><a href="#" class="btn btn-primary btn-lg">Shop All Products</a></p>
+									</a>
+									<div class="desc">
+										<h2><a href="#"><?php echo $row['product_name'];?></a></h2>
+										<span class="price"><?php echo '#'. $row['price'];?></span>
+									</div>
+								</div>
+							</div>
+                            <?php } ?>
+						
+						</div>
+						<div class="row">
+							<div class="col-md-12 text-center">
+								<div class="block-27">
+				               <ul>
+					               <li><a href="#"><i class="ion-ios-arrow-back"></i></a></li>
+				                  <li class="active"><span>1</span></li>
+				                  <li><a href="#">2</a></li>
+				                  <li><a href="#">3</a></li>
+				                  <li><a href="#"><i class="ion-ios-arrow-forward"></i></a></li>
+				               </ul>
+				            </div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -298,7 +279,7 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
 						<h4>Customer Care</h4>
 						<p>
 							<ul class="colorlib-footer-links">
-								<li><a href="contact.php">Contact</a></li>
+								<li><a href="#">Contact</a></li>
 								<li><a href="#">Customer Services</a></li>
 							</ul>
 						</p>
@@ -307,7 +288,7 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
 						<h4>Information</h4>
 						<p>
 							<ul class="colorlib-footer-links">
-								<li><a href="about.php">About us</a></li>
+								<li><a href="#">About us</a></li>
 								<li><a href="#">Delivery Information</a></li>
 							</ul>
 						</p>
@@ -330,7 +311,7 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
 					<div class="col-sm-12 text-center">
 						<p>
 							<span><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This website is design by Jolayemi</a>
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This website is made by Jolayemi</a>
 						</p>
 					</div>
 				</div>
