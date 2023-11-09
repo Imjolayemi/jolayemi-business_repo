@@ -1,3 +1,9 @@
+<?php
+session_start();
+
+$cart_count = isset($_SESSION["arr_count"]) ? $_SESSION["arr_count"] : 0;
+
+?>
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -91,27 +97,13 @@
 								</li>
 								<li class="has-dropdown">
 									<a href="women.php">Women</a>
-									<ul class="dropdown">
-										<li><a href="product-detail.html">Product Detail</a></li>
-										<li><a href="cart.html">Shopping Cart</a></li>
-										<li><a href="checkout.html">Checkout</a></li>
-										<li><a href="order-complete.html">Order Complete</a></li>
-										<li><a href="add-to-wishlist.html">Wishlist</a></li>
-									</ul>
 								</li>
 								<li class="has-dropdown">
 									<a href="kid.php">Kids</a>
-									<ul class="dropdown">
-										<li><a href="product-detail.html">Product Detail</a></li>
-										<li><a href="cart.html">Shopping Cart</a></li>
-										<li><a href="checkout.html">Checkout</a></li>
-										<li><a href="order-complete.html">Order Complete</a></li>
-										<li><a href="add-to-wishlist.html">Wishlist</a></li>
-									</ul>
 								</li>
 								<li class="active"><a href="about.php">About</a></li>
 								<li><a href="contact.php">Contact</a></li>
-								<li class="cart"><a href="cart.php"><i class="icon-shopping-cart"></i> Cart [0]</a></li>
+								<li class="cart"><a href="cart.php"><i class="icon-shopping-cart"></i> Cart [<?= $cart_count; ?>]</a></li>
 							</ul>
 						</div>
 					</div>
@@ -192,10 +184,11 @@
 						<p>Elevate your style effortlessly with this must-have fashion essential. Find your signature look today</p>
 						<p>
 							<ul class="colorlib-social-icons">
-								<li><a href="#"><i class="icon-twitter"></i></a></li>
+                            <li><a href="#"><i class="icon-twitter"></i></a></li>
 								<li><a href="#"><i class="icon-facebook"></i></a></li>
 								<li><a href="#"><i class="icon-linkedin"></i></a></li>
-								<li><a href="#"><i class="icon-dribbble"></i></a></li>
+								<li><a href="#"><i class="icon-instagram"></i></a></li>
+                                <li><a href="#"><i class="icon-whatsapp"></i></a></li>
 							</ul>
 						</p>
 					</div>

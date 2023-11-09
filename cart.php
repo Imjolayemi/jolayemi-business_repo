@@ -1,9 +1,127 @@
+<?php
+// Start the session to access session variables
+session_start();
+$cart_count = isset($_SESSION["arr_count"]) ? $_SESSION["arr_count"] : 0;
+var_dump($_SESSION);
+print "<br>________________<br>";
+print $_SESSION['total'];
+
+if (isset($_GET['remove_id'])) {
+    $removeID = $_GET['remove_id'];
+
+    if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
+        // Iterate through the cart to find the matching item and remove it
+        foreach ($_SESSION['cart'] as $key => $product) {
+            if ($product['id'] == $removeID) {
+                unset($_SESSION['cart'][$key]);
+                // Update the cart count in the session
+                $_SESSION["arr_count"] = count($_SESSION['cart']);
+                break; // Stop the loop after removing the item
+            }
+        }
+    }
+}
+
+// // Calculate subtotal based on items in the cart
+// $_SESSION['subtotal'] = 0;
+
+// // Check if the necessary session variables are set
+// if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
+//     foreach ($_SESSION['cart'] as $product) {
+//         $productId = $product['id'];
+//         $quantity = isset($_POST['quantity_' . $productId]) ? $_POST['quantity_' . $productId] : 0;
+//         $price = $product['price'];
+
+//         // Calculate the total for each item and accumulate the subtotal
+//         $_SESSION['subtotal'] += $price * $quantity;
+//     }
+// }
+?>
 <!DOCTYPE HTML>
 <html>
 	<head>
-	<title>Footwear - Free Bootstrap 4 Template by Colorlib</title>
+	<title>Jolayemi Footwear - Cart Page</title>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+   <!-- <script src="cart.js"></script> -->
+
+   <!-- Inside the JavaScript section -->
+	<script>
+		// Function to calculate and update the subtotal and total amount
+		function updateTotals() {
+			var subtotal = 0;
+
+			// Loop through each item in the cart
+			<?php if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) : ?>
+				<?php foreach ($_SESSION['cart'] as $product) : ?>
+					var productId = <?php echo $product['id']; ?>;
+					var price = <?php echo $product['price']; ?>;
+					var quantity = +document.getElementById('quantity_' + productId).value;
+
+					// Calculate total for each product and accumulate subtotal
+					var total = price * quantity;
+					subtotal += total;
+				<?php endforeach; ?>
+			<?php endif; ?>
+
+			// Display subtotal and update total after deducting any discounts
+			var discount = 45; // Assuming a fixed discount for the demonstration
+			var total = subtotal - discount;
+
+			// Update the displayed subtotal and total on the page
+			document.getElementById('subtotal').innerText = 'NGN ' + subtotal.toFixed(2); // Update subtotal
+			document.getElementById('total').innerText = 'NGN ' + total.toFixed(2); // Update total
+		}
+
+		// Call the function on quantity change to recalculate totals
+		// It seems the `amountValue` function handles quantity changes
+		// Call the updateTotals function inside amountValue function
+		function amountValue(productId) {
+			// Your existing logic to update quantity and total
+			var price = +document.getElementById("price_" + productId).value;
+			var quantityInput = document.getElementById('quantity_' + productId);
+			var totalInput = document.getElementById('total_' + productId);
+
+			// Update the total based on the quantity, assuming some calculation logic
+			var quantityValue = parseInt(quantityInput.value);
+			var calculatedTotal = quantityValue * price /* Your item price or calculation logic */;
+
+			totalInput.value = calculatedTotal ? calculatedTotal : "Amount";
+
+			// Store the values in local storage
+			localStorage.setItem('quantity_' + productId, quantityInput.value);
+			localStorage.setItem('total_' + productId, calculatedTotal);
+
+			// After updating the quantity or total, call the function to update the totals
+			updateTotals();
+		}
+
+		// Call the updateTotals function on page load
+		window.onload = function() {
+			 // Loop through the input elements to retrieve and set the stored values
+			 var inputs = document.querySelectorAll('input[id^="quantity_"]');
+			inputs.forEach(function(input) {
+				var productId = input.id.split('_')[1];
+				var quantity = localStorage.getItem('quantity_' + productId);
+				var total = localStorage.getItem('total_' + productId);
+
+				// Set the input values if stored values exist
+				if (quantity !== null) {
+					input.value = quantity;
+				}
+
+				// Set the total value if stored value exists
+				var totalInput = document.getElementById('total_' + productId);
+				if (total !== null) {
+					totalInput.value = total;
+				}
+			});
+
+			updateTotals();
+		};
+	</script>
+
 
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
@@ -35,47 +153,64 @@
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="css/style.css">
 
+	<style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+
 	</head>
 	<body>
-		
+	<form action="cart.php" method="post" enctype="multipart/form-data">
 	<div class="colorlib-loader"></div>
-
 	<div id="page">
 		<nav class="colorlib-nav" role="navigation">
 			<div class="top-menu">
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-7 col-md-9">
-							<div id="colorlib-logo"><a href="index.html">Footwear</a></div>
+							<div id="colorlib-logo"><a href="index.html">Jolayemi Footwear</a></div>
 						</div>
 						<div class="col-sm-5 col-md-3">
-			            <form action="#" class="search-wrap">
+			            <div class="search-wrap">
 			               <div class="form-group">
 			                  <input type="search" class="form-control search" placeholder="Search">
 			                  <button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
 			               </div>
-			            </form>
+						</div>
 			         </div>
 		         </div>
 					<div class="row">
 						<div class="col-sm-12 text-left menu-1">
 							<ul>
-								<li><a href="index.html">Home</a></li>
-								<li class="has-dropdown active">
-									<a href="men.html">Men</a>
+								<li><a href="index.php">Home</a></li>
+								<li class="has-dropdown">
+									<a href="men.php">Men</a>
 									<ul class="dropdown">
-										<li><a href="product-detail.html">Product Detail</a></li>
-										<li><a href="cart.html">Shopping Cart</a></li>
-										<li><a href="checkout.html">Checkout</a></li>
-										<li><a href="order-complete.html">Order Complete</a></li>
-										<li><a href="add-to-wishlist.html">Wishlist</a></li>
+										<li><a href="product-detail.php">Product Detail</a></li>
+										<li><a href="cart.php">Shopping Cart</a></li>
+										<li><a href="checkout.php">Checkout</a></li>
+										<li><a href="order-complete.php">Order Complete</a></li>
+										<li><a href="add-to-wishlist.php">Wishlist</a></li>
 									</ul>
 								</li>
-								<li><a href="women.html">Women</a></li>
-								<li><a href="about.html">About</a></li>
-								<li><a href="contact.html">Contact</a></li>
-								<li class="cart"><a href="cart.html"><i class="icon-shopping-cart"></i> Cart [0]</a></li>
-							</ul>
+								<li><a href="women.php">Women</a></li>
+								<li><a href="kid.php">Kids</a></li>
+								<li><a href="about.php">About</a></li>
+								<li><a href="contact.php">Contact</a></li>
+								<li class="cart"><a href="cart.html"><i class="icon-shopping-cart"></i> Cart [<?= $cart_count; ?>]</a></li>
+								</ul>
 						</div>
 					</div>
 				</div>
@@ -86,16 +221,7 @@
 						<div class="col-sm-8 offset-sm-2 text-center">
 							<div class="row">
 								<div class="owl-carousel2">
-									<div class="item">
-										<div class="col">
-											<h3><a href="#">25% off (Almost) Everything! Use Code: Summer Sale</a></h3>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col">
-											<h3><a href="#">Our biggest sale yet 50% off all summer shoes</a></h3>
-										</div>
-									</div>
+			
 								</div>
 							</div>
 						</div>
@@ -108,7 +234,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col">
-						<p class="bread"><span><a href="index.html">Home</a></span> / <span>Shopping Cart</span></p>
+						<p class="bread"><span><a href="index.php">Home</a></span> / <span>Shopping Cart</span></p>
 					</div>
 				</div>
 			</div>
@@ -148,129 +274,91 @@
 								<span>Quantity</span>
 							</div>
 							<div class="one-eight text-center">
-								<span>Total</span>
+								<span>Amount</span>
 							</div>
 							<div class="one-eight text-center px-4">
 								<span>Remove</span>
 							</div>
 						</div>
-						<div class="product-cart d-flex">
-							<div class="one-forth">
-								<div class="product-img" style="background-image: url(images/item-6.jpg);">
+						
+						<?php
+						// Check if the necessary session variables are set
+						if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
+							foreach ($_SESSION['cart'] as $product) {
+								$productId = $product['id'];
+								// $quantity = isset($_POST['quantity_' . $productId]) ? $_POST['quantity_' . $productId] : '';
+    							// $total = isset($_POST['total_' . $productId]) ? $_POST['total_' . $productId] : '';
+
+
+								// $_SESSION["quantity"] = $_POST["quantity_".$productId];
+								// $_SESSION["amount"] = $_POST["total_".$productId];
+
+								// $quantity = isset($_SESSION["quantity"]) ? $_SESSION["quantity"] : "";
+								// $amount = isset($_SESSION["amount"]) ? $_SESSION["amount"] : "";
+
+								// print $quantity. " / " . $amount;
+
+								
+							// Display the product details using the session variables
+							echo '
+								<div class="product-cart d-flex">
+								<div class="one-forth">
+									<div class="product-img" style="background-image: url(upload/' . $product['front_image'] . ');"></div>
+									<div class="display-tc">
+									<h3>' . $product['product_name'] . '</h3>
+									</div>
 								</div>
-								<div class="display-tc">
-									<h3>Product Name</h3>
+								<div class="one-eight text-center">
+									<div class="display-tc">
+										<input type="text" name="price_' . $productId . '" id="price_' . $productId . '" class="form-control input-number text-center" value="' . $product['price'] . '" readonly>
+									</div>
 								</div>
-							</div>
-							<div class="one-eight text-center">
-								<div class="display-tc">
-									<span class="price">$68.00</span>
+								<div class="one-eight text-center">
+									<div class="display-tc">
+										<input type="text" id="quantity_' . $productId . '" name="quantity_' . $productId . '" class="form-control input-number text-center" oninput="amountValue(' . $productId . ')" >
+									</div>
 								</div>
-							</div>
-							<div class="one-eight text-center">
-								<div class="display-tc">
-									<input type="text" id="quantity" name="quantity" class="form-control input-number text-center" value="1" min="1" max="100">
+								<div class="one-eight text-center">
+									<div class="display-tc">
+										<input type="text" name="total_' . $productId . '" id="total_' . $productId . '" class="form-control input-number text-center" placeholder="Amount" readonly>
+									</div>
 								</div>
-							</div>
-							<div class="one-eight text-center">
-								<div class="display-tc">
-									<span class="price">$120.00</span>
+								<div class="one-eight text-center">
+									<div class="display-tc">
+									<a href="delete_page.php?remove_id=' . $productId . '" class="closed"></a>
+									</div>
 								</div>
-							</div>
-							<div class="one-eight text-center">
-								<div class="display-tc">
-									<a href="#" class="closed"></a>
 								</div>
-							</div>
-						</div>
-						<div class="product-cart d-flex">
-							<div class="one-forth">
-								<div class="product-img" style="background-image: url(images/item-7.jpg);">
-								</div>
-								<div class="display-tc">
-									<h3>Product Name</h3>
-								</div>
-							</div>
-							<div class="one-eight text-center">
-								<div class="display-tc">
-									<span class="price">$68.00</span>
-								</div>
-							</div>
-							<div class="one-eight text-center">
-								<div class="display-tc">
-									<form action="#">
-										<input type="text" name="quantity" class="form-control input-number text-center" value="1" min="1" max="100">
-									</form>
-								</div>
-							</div>
-							<div class="one-eight text-center">
-								<div class="display-tc">
-									<span class="price">$120.00</span>
-								</div>
-							</div>
-							<div class="one-eight text-center">
-								<div class="display-tc">
-									<a href="#" class="closed"></a>
-								</div>
-							</div>
-						</div>
-						<div class="product-cart d-flex">
-							<div class="one-forth">
-								<div class="product-img" style="background-image: url(images/item-8.jpg);">
-								</div>
-								<div class="display-tc">
-									<h3>Product Name</h3>
-								</div>
-							</div>
-							<div class="one-eight text-center">
-								<div class="display-tc">
-									<span class="price">$68.00</span>
-								</div>
-							</div>
-							<div class="one-eight text-center">
-								<div class="display-tc">
-									<input type="text" id="quantity" name="quantity" class="form-control input-number text-center" value="1" min="1" max="100">
-								</div>
-							</div>
-							<div class="one-eight text-center">
-								<div class="display-tc">
-									<span class="price">$120.00</span>
-								</div>
-							</div>
-							<div class="one-eight text-center">
-								<div class="display-tc">
-									<a href="#" class="closed"></a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+								';
+							}
+						} else {
+							echo '<p>No product details found in the session.</p>';
+						}
+						?>
+
 				<div class="row row-pb-lg">
 					<div class="col-md-12">
 						<div class="total-wrap">
 							<div class="row">
 								<div class="col-sm-8">
-									<form action="#">
 										<div class="row form-group">
-											<div class="col-sm-9">
-												<input type="text" name="quantity" class="form-control input-number" placeholder="Your Coupon Number...">
-											</div>
 											<div class="col-sm-3">
-												<input type="submit" value="Apply Coupon" class="btn btn-primary">
+												<a href="index.php" class="btn btn-primary">Continue Shopping</a>
 											</div>
 										</div>
-									</form>
 								</div>
 								<div class="col-sm-4 text-center">
 									<div class="total">
+										<!-- Update the HTML section where subtotal and total are displayed -->
 										<div class="sub">
-											<p><span>Subtotal:</span> <span>$200.00</span></p>
-											<p><span>Delivery:</span> <span>$0.00</span></p>
-											<p><span>Discount:</span> <span>$45.00</span></p>
+											<p><span>Subtotal:</span> <span id="subtotal"></span></p>
+											<p><span>Delivery:</span> <span>NGN 0.00</span></p>
+											<p><span>Discount:</span> <span>NGN 45.00</span></p>
 										</div>
 										<div class="grand-total">
-											<p><span><strong>Total:</strong></span> <span>$450.00</span></p>
+											<p><span><strong>Total:</strong></span> <span id="total"></span></p>
 										</div>
+
 									</div>
 								</div>
 							</div>
@@ -336,14 +424,15 @@
 			<div class="container">
 				<div class="row row-pb-md">
 					<div class="col footer-col colorlib-widget">
-						<h4>About Footwear</h4>
-						<p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
+						<h4>About Our Product</h4>
+						<p>Elevate your style effortlessly with this must-have fashion essential. Find your signature look today</p>
 						<p>
 							<ul class="colorlib-social-icons">
-								<li><a href="#"><i class="icon-twitter"></i></a></li>
+							<li><a href="#"><i class="icon-twitter"></i></a></li>
 								<li><a href="#"><i class="icon-facebook"></i></a></li>
 								<li><a href="#"><i class="icon-linkedin"></i></a></li>
-								<li><a href="#"><i class="icon-dribbble"></i></a></li>
+								<li><a href="#"><i class="icon-instagram"></i></a></li>
+                                <li><a href="#"><i class="icon-whatsapp"></i></a></li>
 							</ul>
 						</p>
 					</div>
@@ -352,12 +441,7 @@
 						<p>
 							<ul class="colorlib-footer-links">
 								<li><a href="#">Contact</a></li>
-								<li><a href="#">Returns/Exchange</a></li>
-								<li><a href="#">Gift Voucher</a></li>
-								<li><a href="#">Wishlist</a></li>
-								<li><a href="#">Special</a></li>
 								<li><a href="#">Customer Services</a></li>
-								<li><a href="#">Site maps</a></li>
 							</ul>
 						</p>
 					</div>
@@ -367,41 +451,28 @@
 							<ul class="colorlib-footer-links">
 								<li><a href="#">About us</a></li>
 								<li><a href="#">Delivery Information</a></li>
-								<li><a href="#">Privacy Policy</a></li>
-								<li><a href="#">Support</a></li>
-								<li><a href="#">Order Tracking</a></li>
 							</ul>
 						</p>
 					</div>
 
 					<div class="col footer-col">
-						<h4>News</h4>
-						<ul class="colorlib-footer-links">
-							<li><a href="blog.html">Blog</a></li>
-							<li><a href="#">Press</a></li>
-							<li><a href="#">Exhibitions</a></li>
-						</ul>
-					</div>
-
-					<div class="col footer-col">
 						<h4>Contact Information</h4>
 						<ul class="colorlib-footer-links">
-							<li>291 South 21th Street, <br> Suite 721 New York NY 10016</li>
-							<li><a href="tel://1234567920">+ 1235 2355 98</a></li>
-							<li><a href="mailto:info@yoursite.com">info@yoursite.com</a></li>
+							<li>103 Akindeko hostel, <br> Federal University of Technology Akure(FUTA), <br> Ondo-State, <br> Nigeria.</li>
+							<li><a href="#">+2348130906009</a></li>
+							<li><a href="#">jolayemiempire@gmail.com</a></li>
 							<li><a href="#">yoursite.com</a></li>
 						</ul>
 					</div>
 				</div>
 			</div>
+			
 			<div class="copy">
 				<div class="row">
 					<div class="col-sm-12 text-center">
 						<p>
 							<span><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></span> 
-							<span class="block">Demo Images: <a href="http://unsplash.co/" target="_blank">Unsplash</a> , <a href="http://pexels.com/" target="_blank">Pexels.com</a></span>
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This website is design by Jolayemi</a>
 						</p>
 					</div>
 				</div>
@@ -436,7 +507,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="js/jquery.stellar.min.js"></script>
 	<!-- Main -->
 	<script src="js/main.js"></script>
-
+	</form>
 	</body>
 </html>
 
