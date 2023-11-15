@@ -256,14 +256,12 @@ $_SESSION["arr_count"] = count($_SESSION['cart']);
 				               <ul>
 				                  <li> <?= $product['size']; ?> </li>
 				               </ul>
-				            </div>
-						</div>
+				        </div>
+					</div>
 
                   	<div class="row">
 	                  	<div class="col-sm-12 text-center">
-									<p class="addtocart"><a href="cart.php" class="btn btn-primary btn-addtocart"><i class="icon-shopping-cart"></i><input type="submit" name="add_to_cart" class="add_to_cart"  value="Add to Cart"></a></p>
-								</div>
-							</div>
+							<p class="addtocart"><a href="cart.php" class="btn btn-primary btn-addtocart"><i class="icon-shopping-cart"></i>Add to Cart</a></p>
 						</div>
 					</div>
 				</div>

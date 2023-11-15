@@ -2,40 +2,15 @@
 // Start the session to access session variables
 session_start();
 $cart_count = isset($_SESSION["arr_count"]) ? $_SESSION["arr_count"] : 0;
-var_dump($_SESSION);
-print "<br>________________<br>";
-print $_SESSION['total'];
 
-if (isset($_GET['remove_id'])) {
-    $removeID = $_GET['remove_id'];
 
-    if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
-        // Iterate through the cart to find the matching item and remove it
-        foreach ($_SESSION['cart'] as $key => $product) {
-            if ($product['id'] == $removeID) {
-                unset($_SESSION['cart'][$key]);
-                // Update the cart count in the session
-                $_SESSION["arr_count"] = count($_SESSION['cart']);
-                break; // Stop the loop after removing the item
-            }
-        }
-    }
-}
+// var_dump($_SESSION);
+// print "<br>________________<br>";
 
-// // Calculate subtotal based on items in the cart
-// $_SESSION['subtotal'] = 0;
+$connect = include 'database_connection.php';
+$retrieve = "SELECT * FROM footwear_info";
+$qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_connect_error());
 
-// // Check if the necessary session variables are set
-// if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
-//     foreach ($_SESSION['cart'] as $product) {
-//         $productId = $product['id'];
-//         $quantity = isset($_POST['quantity_' . $productId]) ? $_POST['quantity_' . $productId] : 0;
-//         $price = $product['price'];
-
-//         // Calculate the total for each item and accumulate the subtotal
-//         $_SESSION['subtotal'] += $price * $quantity;
-//     }
-// }
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -43,84 +18,7 @@ if (isset($_GET['remove_id'])) {
 	<title>Jolayemi Footwear - Cart Page</title>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-   <!-- <script src="cart.js"></script> -->
-
-   <!-- Inside the JavaScript section -->
-	<script>
-		// Function to calculate and update the subtotal and total amount
-		function updateTotals() {
-			var subtotal = 0;
-
-			// Loop through each item in the cart
-			<?php if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) : ?>
-				<?php foreach ($_SESSION['cart'] as $product) : ?>
-					var productId = <?php echo $product['id']; ?>;
-					var price = <?php echo $product['price']; ?>;
-					var quantity = +document.getElementById('quantity_' + productId).value;
-
-					// Calculate total for each product and accumulate subtotal
-					var total = price * quantity;
-					subtotal += total;
-				<?php endforeach; ?>
-			<?php endif; ?>
-
-			// Display subtotal and update total after deducting any discounts
-			var discount = 45; // Assuming a fixed discount for the demonstration
-			var total = subtotal - discount;
-
-			// Update the displayed subtotal and total on the page
-			document.getElementById('subtotal').innerText = 'NGN ' + subtotal.toFixed(2); // Update subtotal
-			document.getElementById('total').innerText = 'NGN ' + total.toFixed(2); // Update total
-		}
-
-		// Call the function on quantity change to recalculate totals
-		// It seems the `amountValue` function handles quantity changes
-		// Call the updateTotals function inside amountValue function
-		function amountValue(productId) {
-			// Your existing logic to update quantity and total
-			var price = +document.getElementById("price_" + productId).value;
-			var quantityInput = document.getElementById('quantity_' + productId);
-			var totalInput = document.getElementById('total_' + productId);
-
-			// Update the total based on the quantity, assuming some calculation logic
-			var quantityValue = parseInt(quantityInput.value);
-			var calculatedTotal = quantityValue * price /* Your item price or calculation logic */;
-
-			totalInput.value = calculatedTotal ? calculatedTotal : "Amount";
-
-			// Store the values in local storage
-			localStorage.setItem('quantity_' + productId, quantityInput.value);
-			localStorage.setItem('total_' + productId, calculatedTotal);
-
-			// After updating the quantity or total, call the function to update the totals
-			updateTotals();
-		}
-
-		// Call the updateTotals function on page load
-		window.onload = function() {
-			 // Loop through the input elements to retrieve and set the stored values
-			 var inputs = document.querySelectorAll('input[id^="quantity_"]');
-			inputs.forEach(function(input) {
-				var productId = input.id.split('_')[1];
-				var quantity = localStorage.getItem('quantity_' + productId);
-				var total = localStorage.getItem('total_' + productId);
-
-				// Set the input values if stored values exist
-				if (quantity !== null) {
-					input.value = quantity;
-				}
-
-				// Set the total value if stored value exists
-				var totalInput = document.getElementById('total_' + productId);
-				if (total !== null) {
-					totalInput.value = total;
-				}
-			});
-
-			updateTotals();
-		};
-	</script>
+	
 
 
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
@@ -152,6 +50,13 @@ if (isset($_GET['remove_id'])) {
 
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="css/style.css">
+
+	<style>
+        #image{
+            width: 100%; /* Set your desired width in pixels */
+            height: 300px; /* Set your desired height in pixels */ 
+        }
+    </style>
 
 	<style>
         table {
@@ -286,18 +191,6 @@ if (isset($_GET['remove_id'])) {
 						if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
 							foreach ($_SESSION['cart'] as $product) {
 								$productId = $product['id'];
-								// $quantity = isset($_POST['quantity_' . $productId]) ? $_POST['quantity_' . $productId] : '';
-    							// $total = isset($_POST['total_' . $productId]) ? $_POST['total_' . $productId] : '';
-
-
-								// $_SESSION["quantity"] = $_POST["quantity_".$productId];
-								// $_SESSION["amount"] = $_POST["total_".$productId];
-
-								// $quantity = isset($_SESSION["quantity"]) ? $_SESSION["quantity"] : "";
-								// $amount = isset($_SESSION["amount"]) ? $_SESSION["amount"] : "";
-
-								// print $quantity. " / " . $amount;
-
 								
 							// Display the product details using the session variables
 							echo '
@@ -330,11 +223,12 @@ if (isset($_GET['remove_id'])) {
 								</div>
 								</div>
 								';
+
 							}
 						} else {
 							echo '<p>No product details found in the session.</p>';
 						}
-						?>
+						?> 
 
 				<div class="row row-pb-lg">
 					<div class="col-md-12">
@@ -355,12 +249,22 @@ if (isset($_GET['remove_id'])) {
 											<p><span>Delivery:</span> <span>NGN 0.00</span></p>
 											<p><span>Discount:</span> <span>NGN 45.00</span></p>
 										</div>
+										
 										<div class="grand-total">
-											<p><span><strong>Total:</strong></span> <span id="total"></span></p>
-										</div>
+											<p><span><strong>Total:</strong></span><span id=""></span></p><input type="text" name="total_1" id="total_1" readonly>
 
+										</div>
+										<div class="sub"></div>
+										<div class="col-sm-8">
+										<div class="row form-group" style="margin: Auto 50px;">
+											<div class="col-sm-3">
+												<a href="#" class="btn btn-primary" onclick="redirectToSecondPage()">Check-out Order</a>
+											</div>
+										</div>
+										</div>
 									</div>
 								</div>
+								
 							</div>
 						</div>
 					</div>
@@ -372,50 +276,28 @@ if (isset($_GET['remove_id'])) {
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-3 col-lg-3 mb-4 text-center">
-						<div class="product-entry border">
-							<a href="#" class="prod-img">
-								<img src="images/item-1.jpg" class="img-fluid" alt="Free html5 bootstrap 4 template">
-							</a>
-							<div class="desc">
-								<h2><a href="#">Women's Boots Shoes Maca</a></h2>
-								<span class="price">$139.00</span>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3 col-lg-3 mb-4 text-center">
-						<div class="product-entry border">
-							<a href="#" class="prod-img">
-								<img src="images/item-2.jpg" class="img-fluid" alt="Free html5 bootstrap 4 template">
-							</a>
-							<div class="desc">
-								<h2><a href="#">Women's Minam Meaghan</a></h2>
-								<span class="price">$139.00</span>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3 col-lg-3 mb-4 text-center">
-						<div class="product-entry border">
-							<a href="#" class="prod-img">
-								<img src="images/item-3.jpg" class="img-fluid" alt="Free html5 bootstrap 4 template">
-							</a>
-							<div class="desc">
-								<h2><a href="#">Men's Taja Commissioner</a></h2>
-								<span class="price">$139.00</span>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3 col-lg-3 mb-4 text-center">
-						<div class="product-entry border">
-							<a href="#" class="prod-img">
-								<img src="images/item-4.jpg" class="img-fluid" alt="Free html5 bootstrap 4 template">
-							</a>
-							<div class="desc">
-								<h2><a href="#">Russ Men's Sneakers</a></h2>
-								<span class="price">$139.00</span>
-							</div>
-						</div>
-					</div>
+				
+					<?php
+						
+                        while($row  = mysqli_fetch_array($qry)){
+                    ?>
+                        <div class="col-md-3 col-lg-3 mb-4 text-center">
+                            <div class="product-entry border">
+                                <a href="product-detail.php? id=<?= $row['ID']; ?>" class="prod-img">
+                                    <?php echo '
+                                    <img src="upload/'.$row['front_image'].'" class="img-fluid" id="image">';?>
+                                </a>
+                                <div class="desc">
+                                    <h2><a href="product-detail.php"><?php echo $row['product_name'];?></a></h2>
+                                    <span class="price"><?php echo 'NGN '. $row['price'];?></span>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    <?php if (mysqli_fetch_row($qry) == 4)  break; } ?>
+					
+				</div>
+					
 				</div>
 			</div>
 		</div>
@@ -507,6 +389,88 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="js/jquery.stellar.min.js"></script>
 	<!-- Main -->
 	<script src="js/main.js"></script>
+
+	<script>
+
+		function redirectToSecondPage() {
+			var totalValue = document.getElementById('total_1').value;
+			window.location.href = 'checkout.php? subtotal= ' + encodeURIComponent(totalValue);
+		}
+
+
+		// Function to calculate and update the subtotal and total amount
+		function updateTotals() {
+			var subtotal = 0;
+
+			// Loop through each item in the cart
+			<?php if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) : ?>
+				<?php foreach ($_SESSION['cart'] as $product) : ?>
+					var productId = <?php echo $product['id']; ?>;
+					var price = <?php echo $product['price']; ?>;
+					var quantity = +document.getElementById('quantity_' + productId).value;
+
+					// Calculate total for each product and accumulate subtotal
+					var total = price * quantity;
+					subtotal += total;
+				<?php endforeach; ?>
+			<?php endif; ?>
+
+			// Display subtotal and update total after deducting any discounts
+			var discount = 45; // Assuming a fixed discount for the demonstration
+			var total = subtotal - discount;
+
+			// Update the displayed subtotal and total on the page
+			document.getElementById('subtotal').innerText = 'NGN ' + subtotal.toFixed(2); // Update subtotal
+			document.getElementById('total_1').value = 'NGN ' + total.toFixed(2); // Update total
+		}
+
+		// Call the function on quantity change to recalculate totals
+		// It seems the `amountValue` function handles quantity changes
+		// Call the updateTotals function inside amountValue function
+		function amountValue(productId) {
+			// Your existing logic to update quantity and total
+			var price = +document.getElementById("price_" + productId).value;
+			var quantityInput = document.getElementById('quantity_' + productId);
+			var totalInput = document.getElementById('total_' + productId);
+
+			// Update the total based on the quantity, assuming some calculation logic
+			var quantityValue = parseInt(quantityInput.value);
+			var calculatedTotal = quantityValue * price /* Your item price or calculation logic */;
+
+			totalInput.value = calculatedTotal ? calculatedTotal : "Amount";
+
+			// Store the values in local storage
+			localStorage.setItem('quantity_' + productId, quantityInput.value);
+			localStorage.setItem('total_' + productId, calculatedTotal);
+
+			// After updating the quantity or total, call the function to update the totals
+			updateTotals();
+		}
+
+		// Call the updateTotals function on page load
+		window.onload = function() {
+			 // Loop through the input elements to retrieve and set the stored values
+			 var inputs = document.querySelectorAll('input[id^="quantity_"]');
+			inputs.forEach(function(input) {
+				var productId = input.id.split('_')[1];
+				var quantity = localStorage.getItem('quantity_' + productId);
+				var total = localStorage.getItem('total_' + productId);
+
+				// Set the input values if stored values exist
+				if (quantity !== null) {
+					input.value = quantity;
+				}
+
+				// Set the total value if stored value exists
+				var totalInput = document.getElementById('total_' + productId);
+				if (total !== null) {
+					totalInput.value = total;
+				}
+			});
+
+			updateTotals();
+		}
+	</script>
 	</form>
 	</body>
 </html>

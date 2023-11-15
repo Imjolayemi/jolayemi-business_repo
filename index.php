@@ -252,7 +252,7 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
                                 </a>
                                 <div class="desc">
                                     <h2><a href="product-detail.php"><?php echo $row['product_name'];?></a></h2>
-                                    <span class="price"><?php echo '#'. $row['price'];?></span>
+                                    <span class="price"><?php echo 'NGN '. $row['price'];?></span>
                                 </div>
                             </div>
                         

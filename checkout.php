@@ -1,7 +1,13 @@
+<?php
+session_start();
+
+var_dump($_GET);
+?>
+
 <!DOCTYPE HTML>
 <html>
 	<head>
-	<title>Footwear - Free Bootstrap 4 Template by Colorlib</title>
+	<title>Jolayemi Footwear - checkout</title>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -34,6 +40,15 @@
 
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="css/style.css">
+
+	<script>
+        // Retrieve the value from the URL parameter
+        var urlParams = new URLSearchParams(window.location.search);
+        var subtotalValue = urlParams.get('subtotal');
+
+        // Display the value in the second page
+        document.getElementById('subtotalValue').innerText = subtotalValue;
+    </script>
 
 	</head>
 	<body>
@@ -86,16 +101,6 @@
 						<div class="col-sm-8 offset-sm-2 text-center">
 							<div class="row">
 								<div class="owl-carousel2">
-									<div class="item">
-										<div class="col">
-											<h3><a href="#">25% off (Almost) Everything! Use Code: Summer Sale</a></h3>
-										</div>
-									</div>
-									<div class="item">
-										<div class="col">
-											<h3><a href="#">Our biggest sale yet 50% off all summer shoes</a></h3>
-										</div>
-									</div>
 								</div>
 							</div>
 						</div>
@@ -239,11 +244,7 @@
 									<h2>Cart Total</h2>
 									<ul>
 										<li>
-											<span>Subtotal</span> <span>$100.00</span>
-											<ul>
-												<li><span>1 x Product Name</span> <span>$99.00</span></li>
-												<li><span>1 x Product Name</span> <span>$78.00</span></li>
-											</ul>
+											<span>Subtotal</span > <span id="subtotalValue"></span>
 										</li>
 										<li><span>Shipping</span> <span>$0.00</span></li>
 										<li><span>Order Total</span> <span>$180.00</span></li>
