@@ -1,7 +1,90 @@
 <?php
 session_start();
+$connect = include 'database_connection.php';
 
-var_dump($_GET);
+
+$cart_count = isset($_SESSION["arr_count"]) ? $_SESSION["arr_count"] : 0;
+$subtotal = isset($_SESSION['subtotal']) ? $_SESSION['subtotal'] : "No value collected";
+
+
+// Function to validate email
+function validateEmail($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL);
+}
+
+// Function to validate number
+function validateNumber($number) {
+    return is_numeric($number);
+}
+
+// Function to validate name (first name and last name)
+function validateName($name) {
+    // Use a regular expression to allow only letters and spaces
+    return preg_match("/^[a-zA-Z ]+$/", $name);
+}
+
+// Initialize error messages
+$firstNameError = $lastNameError = $phoneNumberError = $emailError = "";
+
+// usage:
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve values from the form
+    $firstName = $_POST["fname"];
+    $lastName = $_POST["lname"];
+    $address = $_POST["address"];
+    $city = $_POST["city"];
+    $country = $_POST["country"];
+    $postalCode = $_POST["postalCode"];
+    $phoneNumber = $_POST["number"];
+    $email = $_POST["email"];
+    $state = $_POST["state"];
+
+	if (isset($_POST["submit"])){
+
+		// Validate first name
+		if (empty($firstName)) {
+			$firstNameError = "First name is required";
+		} elseif (!validateName($firstName)) {
+			$firstNameError = "Invalid first name format";
+		}
+
+		// Validate last name
+		if (empty($lastName)) {
+			$lastNameError = "Last name is required";
+		} elseif (!validateName($lastName)) {
+			$lastNameError = "Invalid last name format";
+		}
+
+		// Validate email
+		if (empty($email)) {
+			$emailError = "email is required";
+		} elseif (!validateEmail($email)) {
+			$emailError = "Invalid email format";
+		}
+
+		
+		// Validate phoneNumber
+		if (empty($phoneNumber)) {
+			$phoneNumberError = "phoneNumber is required";
+		} elseif (!validateNumber($phoneNumber)) {
+			$phoneNumberError = "Invalid Phone Number format";
+		}
+
+
+		// Check if all validations passed
+		if (empty($firstNameError) && empty($lastNameError) && empty($phoneNumberError) && empty($emailError)) {
+			echo "Your Details are required!";
+			// Perform further actions if needed
+		}
+
+		$insert = "INSERT INTO footwear_info(product_name, product_category, price, size, color, front_image, back_image, style) VALUES('$product_name', '$product_category', '$price', '$size', '$color', '$front_image', '$back_image', '$style')";
+
+    	$insert_to_database = mysqli_query($connect, $insert) or die("Cannot insert to table".mysqli_connect_error());
+
+	}
+}
+
+
 ?>
 
 <!DOCTYPE HTML>
@@ -41,6 +124,22 @@ var_dump($_GET);
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="css/style.css">
 
+	<style>
+		#total{
+			width: fit-content;
+			margin-left: 30px;
+			flex-direction: center;
+		}
+
+		#word_total{
+			width: fit-content;
+		}
+
+		.span{
+			color: red;
+		}
+	</style>
+
 	<script>
         // Retrieve the value from the URL parameter
         var urlParams = new URLSearchParams(window.location.search);
@@ -52,7 +151,7 @@ var_dump($_GET);
 
 	</head>
 	<body>
-		
+	<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
 	<div class="colorlib-loader"></div>
 
 	<div id="page">
@@ -61,35 +160,35 @@ var_dump($_GET);
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-7 col-md-9">
-							<div id="colorlib-logo"><a href="index.html">Footwear</a></div>
+							<div id="colorlib-logo"><a href="index.php">Footwear</a></div>
 						</div>
 						<div class="col-sm-5 col-md-3">
-			            <form action="#" class="search-wrap">
+			            <div class="search-wrap">
 			               <div class="form-group">
 			                  <input type="search" class="form-control search" placeholder="Search">
 			                  <button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
 			               </div>
-			            </form>
+						</div>
 			         </div>
 		         </div>
 					<div class="row">
 						<div class="col-sm-12 text-left menu-1">
 							<ul>
-								<li><a href="index.html">Home</a></li>
-								<li class="has-dropdown active">
-									<a href="men.html">Men</a>
+								<li><a href="index.php">Home</a></li>
+								<li class="has-dropdown">
+									<a href="men.php">Men</a>
 									<ul class="dropdown">
-										<li><a href="product-detail.html">Product Detail</a></li>
-										<li><a href="cart.html">Shopping Cart</a></li>
-										<li><a href="checkout.html">Checkout</a></li>
-										<li><a href="order-complete.html">Order Complete</a></li>
-										<li><a href="add-to-wishlist.html">Wishlist</a></li>
+										<li><a href="product-detail.php">Product Detail</a></li>
+										<li><a href="cart.php">Shopping Cart</a></li>
+										<li><a href="checkout.php">Checkout</a></li>
+										<li><a href="order-complete.php">Order Complete</a></li>
+										<li><a href="add-to-wishlist.php">Wishlist</a></li>
 									</ul>
 								</li>
-								<li><a href="women.html">Women</a></li>
-								<li><a href="about.html">About</a></li>
-								<li><a href="contact.html">Contact</a></li>
-								<li class="cart"><a href="cart.html"><i class="icon-shopping-cart"></i> Cart [0]</a></li>
+								<li><a href="women.php">Women</a></li>
+								<li><a href="about.php">About</a></li>
+								<li><a href="contact.php">Contact</a></li>
+								<li class="cart"><a href="cart.php"><i class="icon-shopping-cart"></i> Cart [<?= $cart_count; ?>]</a></li>
 							</ul>
 						</div>
 					</div>
@@ -113,7 +212,7 @@ var_dump($_GET);
 			<div class="container">
 				<div class="row">
 					<div class="col">
-						<p class="bread"><span><a href="index.html">Home</a></span> / <span>Checkout</span></p>
+						<p class="bread"><span><a href="index.php">Home</a></span> / <span>Checkout</span></p>
 					</div>
 				</div>
 			</div>
@@ -142,157 +241,84 @@ var_dump($_GET);
 				</div>
 				<div class="row">
 					<div class="col-lg-8">
-						<form method="post" class="colorlib-form">
+						<div class="colorlib-form">
 							<h2>Billing Details</h2>
 		              	<div class="row">
-			               <div class="col-md-12">
-			                  <div class="form-group">
-			                  	<label for="country">Select Country</label>
-			                     <div class="form-field">
-			                     	<i class="icon icon-arrow-down3"></i>
-			                        <select name="people" id="people" class="form-control">
-				                      	<option value="#">Select country</option>
-				                        <option value="#">Alaska</option>
-				                        <option value="#">China</option>
-				                        <option value="#">Japan</option>
-				                        <option value="#">Korea</option>
-				                        <option value="#">Philippines</option>
-			                        </select>
-			                     </div>
-			                  </div>
-			               </div>
 
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="fname">First Name</label>
-										<input type="text" id="fname" class="form-control" placeholder="Your firstname">
+										<input type="text" id="fname" name="fname" class="form-control" placeholder="Your firstname" required>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="lname">Last Name</label>
-										<input type="text" id="lname" class="form-control" placeholder="Your lastname">
+										<input type="text" id="lname" name="lname" class="form-control" placeholder="Your lastname" required>
 									</div>
 								</div>
 
-								<div class="col-md-12">
-									<div class="form-group">
-										<label for="companyname">Company Name</label>
-			                    	<input type="text" id="companyname" class="form-control" placeholder="Company Name">
-			                  </div>
-			               </div>
+								<div class="col-md-6">
+			               		</div>
 
 			               <div class="col-md-12">
 									<div class="form-group">
 										<label for="fname">Address</label>
-			                    	<input type="text" id="address" class="form-control" placeholder="Enter Your Address">
+			                    	<input type="text" id="address" name="address" class="form-control" placeholder="Enter Your Address" required>
 			                  </div>
-			                  <div class="form-group">
-			                    	<input type="text" id="address2" class="form-control" placeholder="Second Address">
-			                  </div>
+			                
 			               </div>
 			            
 			               <div class="col-md-12">
 									<div class="form-group">
 										<label for="companyname">Town/City</label>
-			                    	<input type="text" id="towncity" class="form-control" placeholder="Town or City">
+			                    	<input type="text" id="towncity" name="city" class="form-control" placeholder="Town or City" required>
 			                  </div>
 			               </div>
 			            
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="stateprovince">State/Province</label>
-										<input type="text" id="fname" class="form-control" placeholder="State Province">
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label for="lname">Zip/Postal Code</label>
-										<input type="text" id="zippostalcode" class="form-control" placeholder="Zip / Postal">
+										<input type="text" id="fname" name="state" class="form-control" placeholder="State Province" required>
 									</div>
 								</div>
 							
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="email">E-mail Address</label>
-										<input type="text" id="email" class="form-control" placeholder="State Province">
+										<input type="email" id="email" name="email" class="form-control" placeholder="E-mail" required>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="Phone">Phone Number</label>
-										<input type="text" id="zippostalcode" class="form-control" placeholder="">
+										<input type="text" id="zippostalcode" name="number" class="form-control" placeholder="Phone Number" required>
 									</div>
 								</div>
-
-								<div class="col-md-12">
-									<div class="form-group">
-										<div class="radio">
-										  <label><input type="radio" name="optradio"> Create an Account? </label>
-										  <label><input type="radio" name="optradio"> Ship to different address</label>
+							<div class="col-md-6">
+								<div class="row">
+									<div class="col-md-12">
+										<div class="cart-detail">
+											<h2>Cart Total</h2>
+											<ul>
+												<li>
+													<span id="word_total">Subtotal</span > <span id="total"><?= $subtotal; ?></span>
+												</li>
+												<li><span id="word_total">Shipping</span> <span id="total">NGN 180.00</span></li>
+												<li><span id="word_total">Order Total</span> <span id="total">NGN 0.00</span></li>
+											</ul>
+										</div>
+										<div class="col-md-12 text-center">
+											<p><input type="submit" class="btn btn-primary" name="submit" value="Place an order"></p>
 										</div>
 									</div>
-								</div>
+						   		</div>
+
+						   	</div>
+								
+						</div>
 		               </div>
-		            </form>
 					</div>
-
-					<div class="col-lg-4">
-						<div class="row">
-							<div class="col-md-12">
-								<div class="cart-detail">
-									<h2>Cart Total</h2>
-									<ul>
-										<li>
-											<span>Subtotal</span > <span id="subtotalValue"></span>
-										</li>
-										<li><span>Shipping</span> <span>$0.00</span></li>
-										<li><span>Order Total</span> <span>$180.00</span></li>
-									</ul>
-								</div>
-						   </div>
-
-						   <div class="w-100"></div>
-
-						   <div class="col-md-12">
-								<div class="cart-detail">
-									<h2>Payment Method</h2>
-									<div class="form-group">
-										<div class="col-md-12">
-											<div class="radio">
-											   <label><input type="radio" name="optradio"> Direct Bank Tranfer</label>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="col-md-12">
-											<div class="radio">
-											   <label><input type="radio" name="optradio"> Check Payment</label>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="col-md-12">
-											<div class="radio">
-											   <label><input type="radio" name="optradio"> Paypal</label>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="col-md-12">
-											<div class="checkbox">
-											   <label><input type="checkbox" value=""> I have read and accept the terms and conditions</label>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-12 text-center">
-								<p><a href="#" class="btn btn-primary">Place an order</a></p>
-							</div>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -302,14 +328,15 @@ var_dump($_GET);
 			<div class="container">
 				<div class="row row-pb-md">
 					<div class="col footer-col colorlib-widget">
-						<h4>About Footwear</h4>
-						<p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
+						<h4>About Our Product</h4>
+						<p>Elevate your style effortlessly with this must-have fashion essential. Find your signature look today</p>
 						<p>
 							<ul class="colorlib-social-icons">
-								<li><a href="#"><i class="icon-twitter"></i></a></li>
+							<li><a href="#"><i class="icon-twitter"></i></a></li>
 								<li><a href="#"><i class="icon-facebook"></i></a></li>
 								<li><a href="#"><i class="icon-linkedin"></i></a></li>
-								<li><a href="#"><i class="icon-dribbble"></i></a></li>
+								<li><a href="#"><i class="icon-instagram"></i></a></li>
+                                <li><a href="#"><i class="icon-whatsapp"></i></a></li>
 							</ul>
 						</p>
 					</div>
@@ -318,12 +345,7 @@ var_dump($_GET);
 						<p>
 							<ul class="colorlib-footer-links">
 								<li><a href="#">Contact</a></li>
-								<li><a href="#">Returns/Exchange</a></li>
-								<li><a href="#">Gift Voucher</a></li>
-								<li><a href="#">Wishlist</a></li>
-								<li><a href="#">Special</a></li>
 								<li><a href="#">Customer Services</a></li>
-								<li><a href="#">Site maps</a></li>
 							</ul>
 						</p>
 					</div>
@@ -333,41 +355,28 @@ var_dump($_GET);
 							<ul class="colorlib-footer-links">
 								<li><a href="#">About us</a></li>
 								<li><a href="#">Delivery Information</a></li>
-								<li><a href="#">Privacy Policy</a></li>
-								<li><a href="#">Support</a></li>
-								<li><a href="#">Order Tracking</a></li>
 							</ul>
 						</p>
 					</div>
 
 					<div class="col footer-col">
-						<h4>News</h4>
-						<ul class="colorlib-footer-links">
-							<li><a href="blog.html">Blog</a></li>
-							<li><a href="#">Press</a></li>
-							<li><a href="#">Exhibitions</a></li>
-						</ul>
-					</div>
-
-					<div class="col footer-col">
 						<h4>Contact Information</h4>
 						<ul class="colorlib-footer-links">
-							<li>291 South 21th Street, <br> Suite 721 New York NY 10016</li>
-							<li><a href="tel://1234567920">+ 1235 2355 98</a></li>
-							<li><a href="mailto:info@yoursite.com">info@yoursite.com</a></li>
+							<li>103 Akindeko hostel, <br> Federal University of Technology Akure(FUTA), <br> Ondo-State, <br> Nigeria.</li>
+							<li><a href="#">+2348130906009</a></li>
+							<li><a href="#">jolayemiempire@gmail.com</a></li>
 							<li><a href="#">yoursite.com</a></li>
 						</ul>
 					</div>
 				</div>
 			</div>
+			
 			<div class="copy">
 				<div class="row">
 					<div class="col-sm-12 text-center">
 						<p>
 							<span><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></span> 
-							<span class="block">Demo Images: <a href="http://unsplash.co/" target="_blank">Unsplash</a> , <a href="http://pexels.com/" target="_blank">Pexels.com</a></span>
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This website is design by Jolayemi</a>
 						</p>
 					</div>
 				</div>
@@ -402,7 +411,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="js/jquery.stellar.min.js"></script>
 	<!-- Main -->
 	<script src="js/main.js"></script>
-
+	</form>
 	</body>
 </html>
 

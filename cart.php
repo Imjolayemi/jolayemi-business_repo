@@ -56,6 +56,10 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
             width: 100%; /* Set your desired width in pixels */
             height: 300px; /* Set your desired height in pixels */ 
         }
+		#total_1{
+			background: none;
+			border: none;
+		}
     </style>
 
 	<style>
@@ -251,7 +255,7 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
 										</div>
 										
 										<div class="grand-total">
-											<p><span><strong>Total:</strong></span><span id=""></span></p><input type="text" name="total_1" id="total_1" readonly>
+											<p><span><strong>Total:</strong></span><span id=""><input type="text" name="total_1" id="total_1" readonly></span></p>
 
 										</div>
 										<div class="sub"></div>
@@ -394,7 +398,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 		function redirectToSecondPage() {
 			var totalValue = document.getElementById('total_1').value;
-			window.location.href = 'checkout.php? subtotal= ' + encodeURIComponent(totalValue);
+			window.location.href = 'confirm_checkout.php?subtotal=' + encodeURIComponent(totalValue);
 		}
 
 
