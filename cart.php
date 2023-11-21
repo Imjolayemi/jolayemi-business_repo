@@ -9,7 +9,7 @@ $cart_count = isset($_SESSION["arr_count"]) ? $_SESSION["arr_count"] : 0;
 
 $connect = include 'database_connection.php';
 $retrieve = "SELECT * FROM footwear_info";
-$qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_connect_error());
+$qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_connect_error($connect));
 
 ?>
 <!DOCTYPE HTML>
@@ -256,6 +256,7 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
 										
 										<div class="grand-total">
 											<p><span><strong>Total:</strong></span><span id=""><input type="text" name="total_1" id="total_1" readonly></span></p>
+											<input type="hidden" name="total_1" id="total_copy" readonly>
 
 										</div>
 										<div class="sub"></div>
@@ -397,7 +398,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script>
 
 		function redirectToSecondPage() {
-			var totalValue = document.getElementById('total_1').value;
+			var totalValue = document.getElementById('total_copy').value;
 			window.location.href = 'confirm_checkout.php?subtotal=' + encodeURIComponent(totalValue);
 		}
 
@@ -426,6 +427,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			// Update the displayed subtotal and total on the page
 			document.getElementById('subtotal').innerText = 'NGN ' + subtotal.toFixed(2); // Update subtotal
 			document.getElementById('total_1').value = 'NGN ' + total.toFixed(2); // Update total
+			document.getElementById('total_copy').value = total.toFixed(2);
 		}
 
 		// Call the function on quantity change to recalculate totals
@@ -476,6 +478,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		}
 	</script>
 	</form>
+	<?php mysqli_close($connect); ?>
 	</body>
 </html>
 

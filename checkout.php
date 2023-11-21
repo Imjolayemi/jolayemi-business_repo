@@ -3,6 +3,16 @@ session_start();
 $connect = include 'database_connection.php';
 
 
+function generateRandomString($length = 8) {
+    $randomBytes = random_bytes($length);
+    return bin2hex($randomBytes);
+}
+
+// Usage example: generate a random alphanumeric string with a length of 10
+$_SESSION['randomString'] = generateRandomString(10);
+
+
+
 $cart_count = isset($_SESSION["arr_count"]) ? $_SESSION["arr_count"] : 0;
 $subtotal = isset($_SESSION['subtotal']) ? $_SESSION['subtotal'] : "No value collected";
 
@@ -29,15 +39,19 @@ $firstNameError = $lastNameError = $phoneNumberError = $emailError = "";
 // usage:
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve values from the form
-    $firstName = $_POST["fname"];
-    $lastName = $_POST["lname"];
-    $address = $_POST["address"];
-    $city = $_POST["city"];
-    $country = $_POST["country"];
-    $postalCode = $_POST["postalCode"];
-    $phoneNumber = $_POST["number"];
-    $email = $_POST["email"];
-    $state = $_POST["state"];
+    $_SESSION["fname"] = $_POST["fname"];
+    $_SESSION["lname"] = $_POST["lname"];
+    $_SESSION["city"] = $_POST["city"];
+    $_SESSION["number"] = $_POST["number"];
+    $_SESSION["email"] = $_POST["email"];
+    $_SESSION["state"] = $_POST["state"];
+
+	$firstName = $_SESSION["fname"];
+    $lastName = $_SESSION["lname"];
+    $city = $_SESSION["city"];
+    $phoneNumber = $_SESSION["number"];
+    $email = $_SESSION["email"];
+    $state = $_SESSION["state"];
 
 	if (isset($_POST["submit"])){
 
@@ -77,10 +91,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			// Perform further actions if needed
 		}
 
-		$insert = "INSERT INTO footwear_info(product_name, product_category, price, size, color, front_image, back_image, style) VALUES('$product_name', '$product_category', '$price', '$size', '$color', '$front_image', '$back_image', '$style')";
+		// $insert = "INSERT INTO footwear_info(product_name, product_category, price, size, color, front_image, back_image, style) VALUES('$product_name', '$product_category', '$price', '$size', '$color', '$front_image', '$back_image', '$style')";
 
-    	$insert_to_database = mysqli_query($connect, $insert) or die("Cannot insert to table".mysqli_connect_error());
+    	// $insert_to_database = mysqli_query($connect, $insert) or die("Cannot insert to table".mysqli_connect_error($connect));
 
+		header("Location: pay.php");
+		exit();
 	}
 }
 
@@ -257,17 +273,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 										<input type="text" id="lname" name="lname" class="form-control" placeholder="Your lastname" required>
 									</div>
 								</div>
-
-								<div class="col-md-6">
-			               		</div>
-
-			               <div class="col-md-12">
-									<div class="form-group">
-										<label for="fname">Address</label>
-			                    	<input type="text" id="address" name="address" class="form-control" placeholder="Enter Your Address" required>
-			                  </div>
-			                
-			               </div>
 			            
 			               <div class="col-md-12">
 									<div class="form-group">
@@ -302,7 +307,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 											<h2>Cart Total</h2>
 											<ul>
 												<li>
-													<span id="word_total">Subtotal</span > <span id="total"><?= $subtotal; ?></span>
+													<span id="word_total">Subtotal</span > <span id="total">NGN <?= $subtotal; ?></span>
 												</li>
 												<li><span id="word_total">Shipping</span> <span id="total">NGN 180.00</span></li>
 												<li><span id="word_total">Order Total</span> <span id="total">NGN 0.00</span></li>
@@ -413,5 +418,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="js/main.js"></script>
 	</form>
 	</body>
+	<?php mysqli_close($connect); ?>
 </html>
 

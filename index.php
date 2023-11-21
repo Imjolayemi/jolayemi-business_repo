@@ -6,7 +6,7 @@ $cart_count = isset($_SESSION["arr_count"]) ? $_SESSION["arr_count"] : 0;
 
 $connect = include 'database_connection.php';
 $retrieve = "SELECT * FROM footwear_info";
-$qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_connect_error());
+$qry = mysqli_query($connect, $retrieve) or die("Cannot process to table".mysqli_connect_error($connect));
 ?>
 
 
@@ -257,7 +257,7 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
                             </div>
                         
                         </div>
-                    <?php } ?>
+                    <?php } mysqli_close($connect); ?>
 					
 				</div>
 				<div class="row">

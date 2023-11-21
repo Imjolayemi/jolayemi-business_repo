@@ -19,7 +19,7 @@ if (isset($_GET["id"])) {
         // Add your logic here to add the product to the cart session array
 		$connect = include 'database_connection.php';
 		$retrieve = "SELECT * FROM footwear_info WHERE ID = $productId";
-		$qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table" . mysqli_connect_error());
+		$qry = mysqli_query($connect, $retrieve) or die("Cannot connect to table" . mysqli_connect_error($connect));
     }
 }else{
 	header("Location: index.php");
@@ -30,7 +30,7 @@ if (isset($_GET["id"])) {
 // 	$id = $_GET["id"];
 // 	$connect = include 'database_connection.php';
 // 	$retrieve = "SELECT * FROM footwear_info WHERE ID = $id";
-// 	$qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table" . mysqli_connect_error());
+// 	$qry = mysqli_query($connect, $retrieve) or die("Cannot connect to table" . mysqli_connect_error());
 
 // }else{
 // 	header("Location: index.php");
@@ -252,17 +252,18 @@ $_SESSION["arr_count"] = count($_SESSION['cart']);
 							<p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
 							<div class="size-wrap">
 								<div class="block-26 mb-2">
-									<h4>Size</h4>
-				               <ul>
-				                  <li> <?= $product['size']; ?> </li>
-				               </ul>
+											<h4>Size</h4>
+									<ul>
+										<li> <?= $product['size']; ?> </li>
+									</ul>
+								</div>
+							</div>
 				        </div>
-					</div>
-
-                  	<div class="row">
+						<div class="row">
 	                  	<div class="col-sm-12 text-center">
 							<p class="addtocart"><a href="cart.php" class="btn btn-primary btn-addtocart"><i class="icon-shopping-cart"></i>Add to Cart</a></p>
 						</div>
+					</div>
 					</div>
 				</div>
 
@@ -563,7 +564,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		            }
 		    });
 		    
-		});
+		}); <?php mysqli_close($connect); ?>
 	</script>
 	</form>
 	</body>
