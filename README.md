@@ -1,5 +1,5 @@
 <span style="font-size: 20px;">Welcome to Jolayemi Footwear</span>
-![Jolayemi Footwear Logo](images/jolayemi flier.jpg)
+Jolayemi Footwear Logo images/jolayemi flier.jpg
 
 <span style="font-size: 20px;">About Us</span>
 At Jolayemi Footwear, we are passionate about one thing - providing our customers with the most stylish and comfortable footwear. We understand that your choice of shoes reflects your personality and lifestyle, and that's why we bring you an extensive range of footwear options to suit every occasion.
