@@ -82,7 +82,7 @@ if (isset($_GET['reference'])){
                         $stmt->execute();
 
                 // If the insertion is successful, you can redirect to the next page
-                header('Location: order-complete.html');
+                header('Location: receipt.php');
 
             } catch (PDOException $e) {
                 echo "Error: " . $e->getMessage();
@@ -91,6 +91,8 @@ if (isset($_GET['reference'])){
             // $conn = null;
         } else {
             echo "<script> alert ('Go back'); </script>";
+            header('Location: checkout.php');
+            exit();
         }
     
 }

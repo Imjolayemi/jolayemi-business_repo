@@ -1,154 +1,54 @@
 <?php
-// session_start();
-
-// $front_img = $_SESSION['front_image'];
-// $product_name = $_SESSION['product_name'];
-// $price = $_SESSION['price'];
-// $_SESSION['i'] = 0;
-
-
-// if (!isset($_SESSION['main_arr'])) {
-//     $_SESSION['main_arr'] = [];
-// }
-
-// if (empty($_SESSION['product_name'])) {
-//     header("Location: index.php");
-//     exit;
-// }
-
-// $newProduct = [
-//     'id' => count($_SESSION['main_arr']),
-//     'front_image' => $_SESSION['front_image'],
-//     'product_name' => $_SESSION['product_name'],
-//     'price' => $_SESSION['price']
-// ];
-
-// $_SESSION['main_arr'][] = $newProduct;
-// // print_r($_SESSION['main_arr']);
-// // print "<br>________________<br>";
-
-
-// if (!isset($_SESSION['img']) && !isset($_SESSION['name']) && !isset($_SESSION['amount']))
-// {
-// 	$_SESSION['num'] = [];
-//     $_SESSION['img']= [];
-// 	$_SESSION['name'] = [];
-// 	$_SESSION['amount'] = [];
-// }
-
-// while ($_SESSION['i'] <= count($_SESSION['num'])) $_SESSION['i']++;
-
-// $_SESSION['num'][]= $_SESSION['i'] - 1;
-// $_SESSION['img'][] = $front_img;
-// $_SESSION['name'][] = $product_name;
-// $_SESSION['amount'][] = $price;
-
-// // print_r($_SESSION['num']);
-// // print "<br>________________<br>";
-// // print_r($_SESSION['img']);
-// // print "<br>________________<br>";
-// // print_r($_SESSION['name']);
-// // print "<br>________________<br>";
-// // print_r($_SESSION['amount']);
-
-// for ($i = 0; $i < count($_SESSION['num']); $i++)
-// {
-// 	// print '<input type="submit" name="delete_' . $i . '" id="delete_' . $i . '" class="form-control input-number text-center" value="delete_' . $i . '">';
-// }
-
-// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//     foreach ($_POST as $key => $value) {
-//         if (strpos($key, 'delete_') !== false) {
-//             $index = (int)substr($key, strlen('delete_'));
-//             if (isset($_SESSION['main_arr'][$index])) {
-//                 unset($_SESSION['main_arr'][$index]);
-//             }
-//         }
-//     }
-
-//     // Re-index the session array
-//     $_SESSION['main_arr'] = array_values($_SESSION['main_arr']);
-// }
-
+// Start the session to access session variables
 session_start();
+$cart_count = isset($_SESSION["arr_count"]) ? $_SESSION["arr_count"] : 0;
 
-// Check if there are existing main_arr and initialize it if not
-if (!isset($_SESSION['main_arr'])) {
-    $_SESSION['main_arr'] = [];
-}
 
-// If product details are empty, redirect to index.php
-if (empty($_SESSION['product_name'])) {
-    header("Location: index.php");
-    exit;
-}
+// var_dump($_SESSION);
+// print "<br>________________<br>";
 
-// Create a new product object
-$newProduct = [
-    'id' => count($_SESSION['main_arr']),
-    'front_image' => $_SESSION['front_image'],
-    'product_name' => $_SESSION['product_name'],
-    'price' => $_SESSION['price']
-];
+$connect = include 'database_connection.php';
+$retrieve = "SELECT * FROM footwear_info";
+$qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_connect_error($connect));
 
-// Add the new product to the main_arr
-$_SESSION['main_arr'][] = $newProduct;
+echo '
+<script>
+var products = ' . json_encode($_SESSION['receipt']) . ';
 
-// Check if the POST method is invoked
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    foreach ($_POST as $key => $value) {
-        if (strpos($key, 'delete_') !== false) {
-            $index = (int)substr($key, strlen('delete_'));
-            if (isset($_SESSION['main_arr'][$index])) {
-                unset($_SESSION['main_arr'][$index]);
-            }
+    
+    for (var productId in products) {
+        if (products.hasOwnProperty(productId)) {
+            var product = products[productId];
+			if ( product.quantity == null){
+				continue
+			}
+			else{
+            alert("Product Name: " + product.product_name +
+                  "\\nQuantity: " + product.quantity +
+                  "\\nPrice: " + product.price +
+                  "\\nTotal: " + product.total);
+			}
         }
-    }
-
-    // Re-index the session array
-    $_SESSION['main_arr'] = array_values($_SESSION['main_arr']);
-}
+    } </script>';
 
 ?>
-
 <!DOCTYPE HTML>
 <html>
 	<head>
 	<title>Jolayemi Footwear - Cart Page</title>
-   <meta charset="utf-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-   <script src="cart.js"></script>
+	<?php include 'link.html';?>
 
-	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
-	
-	<!-- Animate.css -->
-	<link rel="stylesheet" href="css/animate.css">
-	<!-- Icomoon Icon Fonts-->
-	<link rel="stylesheet" href="css/icomoon.css">
-	<!-- Ion Icon Fonts-->
-	<link rel="stylesheet" href="css/ionicons.min.css">
-	<!-- Bootstrap  -->
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-
-	<!-- Magnific Popup -->
-	<link rel="stylesheet" href="css/magnific-popup.css">
-
-	<!-- Flexslider  -->
-	<link rel="stylesheet" href="css/flexslider.css">
-
-	<!-- Owl Carousel -->
-	<link rel="stylesheet" href="css/owl.carousel.min.css">
-	<link rel="stylesheet" href="css/owl.theme.default.min.css">
-	
-	<!-- Date Picker -->
-	<link rel="stylesheet" href="css/bootstrap-datepicker.css">
-	<!-- Flaticons  -->
-	<link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
-
-	<!-- Theme style  -->
-	<link rel="stylesheet" href="css/style.css">
+	<style>
+        #image{
+            width: 100%; /* Set your desired width in pixels */
+            height: 300px; /* Set your desired height in pixels */ 
+        }
+		#total_1{
+			background: none;
+			border: none;
+		}
+    </style>
 
 	<style>
         table {
@@ -169,63 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 	</head>
 	<body>
+	<form action="cart.php" method="post" enctype="multipart/form-data">
 	<div class="colorlib-loader"></div>
-
 	<div id="page">
-		<nav class="colorlib-nav" role="navigation">
-			<div class="top-menu">
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-7 col-md-9">
-							<div id="colorlib-logo"><a href="index.html">Jolayemi Footwear</a></div>
-						</div>
-						<div class="col-sm-5 col-md-3">
-			            <form action="#" class="search-wrap">
-			               <div class="form-group">
-			                  <input type="search" class="form-control search" placeholder="Search">
-			                  <button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
-			               </div>
-			            </form>
-			         </div>
-		         </div>
-					<div class="row">
-						<div class="col-sm-12 text-left menu-1">
-							<ul>
-								<li><a href="index.php">Home</a></li>
-								<li class="has-dropdown">
-									<a href="men.php">Men</a>
-									<ul class="dropdown">
-										<li><a href="product-detail.php">Product Detail</a></li>
-										<li><a href="cart.php">Shopping Cart</a></li>
-										<li><a href="checkout.php">Checkout</a></li>
-										<li><a href="order-complete.php">Order Complete</a></li>
-										<li><a href="add-to-wishlist.php">Wishlist</a></li>
-									</ul>
-								</li>
-								<li><a href="women.php">Women</a></li>
-								<li><a href="kid.php">Kids</a></li>
-								<li><a href="about.php">About</a></li>
-								<li><a href="contact.php">Contact</a></li>
-								<li class="cart"><a href="cart.php" class="icon-shopping-cart">Cart [<?= count($_SESSION['main_arr']); ?>]</a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="sale">
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-8 offset-sm-2 text-center">
-							<div class="row">
-								<div class="owl-carousel2">
-			
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</nav>
+
+	<?php include 'navigation.html';?>
 
 		<div class="breadcrumbs">
 			<div class="container">
@@ -271,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 								<span>Quantity</span>
 							</div>
 							<div class="one-eight text-center">
-								<span>Total</span>
+								<span>Amount</span>
 							</div>
 							<div class="one-eight text-center px-4">
 								<span>Remove</span>
@@ -279,84 +127,140 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						</div>
 						
 						<?php
-							if (!empty($_SESSION['main_arr'])) {
-								foreach ($_SESSION['main_arr'] as $key => $product) {
-									echo create_product_html($product['id'], $product['front_image'], $product['product_name'], $product['price']);
-								}
-							}
+						// Check if the necessary session variables are set
+						if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
 
-							/* if (!empty($_SESSION['num']))
-							{
-								for ($a = 0; $a < count($_SESSION['num']); $a++) {
-									echo create_product_html($a."M", $_SESSION['img'][$a], $_SESSION['name'][$a], $_SESSION['amount'][$a]);
-								}
-							}
- */
-						function create_product_html($id, $front_image, $product_name, $price)
-						{
-							
-							return '<form method="POST">
-							<div class="product-cart d-flex" id="product_' . $id . '">
-									<div class="one-forth">
-									<div class="product-img" style="background-image: url(upload/' . $front_image . ')">
-									</div>
-									<div class="display-tc">
-										<h3>' .$id . $product_name . '</h3>
-									</div>
-								</div>
-								<div class="one-eight text-center">
-									<div class="display-tc">
-										<input type="text" name="price_' . $id . '" id="price_' . $id . '" class="form-control input-number text-center" value="' . $price . '" readonly>
-									</div>
-								</div>
-								<div class="one-eight text-center">
-									<div class="display-tc">
-										<input type="text" id="quantity_' . $id . '" name="quantity_' . $id . '" class="form-control input-number text-center" oninput="amountValue(' . $id . ')">
-									</div>
-								</div>
-								<div class="one-eight text-center">
-									<div class="display-tc">
-										<input type="text" name="total_' . $id . '" id="total_' . $id . '" class="form-control input-number text-center" placeholder="Total" readonly>
-									</div>
-								</div>
-								<div class="one-eight text-center">
-									<div class="display-tc">
-									<button type="submit" name="delete_' . $id . '">Delete</button>
+							if (empty($_SESSION['cart'])) {
+								echo '<p>No product details found in the session.</p>';
+							}else{
+								foreach ($_SESSION['cart'] as $product) {
+									$productId = $product['id'];
+
+									 
 									
+									// Display the product details using the session variables
+									echo '
+									<div class="product-cart d-flex">
+									<div class="one-forth">
+										<div class="product-img" style="background-image: url(upload/' . $product['front_image'] . ');"></div>
+										<div class="display-tc">
+										<h3>' . $product['product_name'] . '</h3>
+										</div>
 									</div>
-								</div>
-								</div>
-								</form>';
+									<div class="one-eight text-center">
+										<div class="display-tc">
+											<input type="text" name="price_' . $productId . '" id="price_' . $productId . '" class="form-control input-number text-center" value="' . $product['price'] . '" readonly>
+										
+										</div>
+									</div>
+									<div class="one-eight text-center">
+										<div class="display-tc">
+											<input type="text" id="quantity_' . $productId . '" name="quantity_' . $productId . '" class="form-control input-number text-center" oninput="amountValue(' . $productId . ')" >
+										</div>
+									</div>
+									<div class="one-eight text-center">
+										<div class="display-tc">
+											<input type="text" name="total_' . $productId . '" id="total_' . $productId . '" class="form-control input-number text-center" placeholder="Amount" readonly>
+										</div>
+									</div>
+									<div class="one-eight text-center">
+										<div class="display-tc">
+										<a href="delete_page.php?remove_id=' . $productId . '" class="closed"></a>
+										</div>
+									</div>
+									</div>
+									';
+
+									// $_SESSION['receipt'][$productId]['product_name'] = $product['product_name'];
+									// $_SESSION['receipt'][$productId]['quantity'] = $_POST['quantity_' . $productId];
+									// $_SESSION['receipt'][$productId]['price'] = $product['price'];
+									// $_SESSION['receipt'][$productId]['total'] = $_POST['total_' . $productId];
+
+									// Retrieve values from local storage
+									// $quantityKey = 'quantity_' . $productId;
+									// $totalKey = 'total_' . $productId;
+						
+									// // Set default values to zero if not found
+									// $quantity = isset($_POST[$quantityKey]) ? $_POST[$quantityKey] : (isset($_SESSION['receipt'][$productId]['quantity']) ? $_SESSION['receipt'][$productId]['quantity'] : 1);
+									// $total = isset($_POST[$totalKey]) ? $_POST[$totalKey] : (isset($_SESSION['receipt'][$productId]['total']) ? $_SESSION['receipt'][$productId]['total'] : 1);
+						
+									// // Assign values to session variables
+									// $_SESSION['receipt'][$productId]['product_name'] = $product['product_name'];
+									// $_SESSION['receipt'][$productId]['quantity'] = $quantity;
+									// $_SESSION['receipt'][$productId]['price'] = $product['price'];
+									// $_SESSION['receipt'][$productId]['total'] = $total;
+								}
+								
+							}
+							
+						}else {
+							echo '<p>No product details found in the session.</p>';
 						}
-						?>
-		
-					</div>
-				</div>
-				<div class="row row-pb-lg">
+
+
+// // 						echo '
+// // <script>
+// // var products = ' . json_encode($_SESSION['receipt']) . ';
+
+    
+// //     for (var productId in products) {
+// //         if (products.hasOwnProperty(productId)) {
+// //             var product = products[productId];
+// // 			if ( product.quantity == null){
+// // 				continue
+// // 			}
+// // 			else{
+// //             alert("Product Name: " + product.product_name +
+// //                   "\\nQuantity: " + product.quantity +
+// //                   "\\nPrice: " + product.price +
+// //                   "\\nTotal: " + product.total);
+// // 			}
+// //         }
+// //     }
+
+// // </script>
+// ';
+						?> 
+						<div class="row row-pb-lg">
 					<div class="col-md-12">
 						<div class="total-wrap">
 							<div class="row">
 								<div class="col-sm-8">
-									<form action="#">
 										<div class="row form-group">
 											<div class="col-sm-3">
-											<a href="index.php" class="btn btn-primary">Continue Shopping</a>
+												<a href="index.php" class="btn btn-primary">Continue Shopping</a>
 											</div>
 										</div>
-									</form>
 								</div>
 								<div class="col-sm-4 text-center">
 									<div class="total">
+										<!-- Update the HTML section where subtotal and total are displayed -->
 										<div class="sub">
-											<p><span>Subtotal:</span> <span>$200.00</span></p>
-											<p><span>Delivery:</span> <span>$0.00</span></p>
-											<p><span>Discount:</span> <span>$45.00</span></p>
+											<p><span>Subtotal:</span> <span id="subtotal"></span></p>
+											<p><span>Delivery:</span> <span>NGN 0.00</span></p>
+											<p><span>Discount:</span> <span>NGN 45.00</span></p>
 										</div>
+										
 										<div class="grand-total">
-											<p><span><strong>Total:</strong></span> <span>$450.00</span></p>
+											<p><span><strong>Total:</strong></span><span id=""><input type="text" name="total_1" id="total_1" readonly></span></p>
+											<input type="hidden" name="total_1" id="total_copy" readonly>
+
+										</div>
+										<div class="sub"></div>
+										<div class="col-sm-8">
+										<div class="row form-group" style="margin: Auto 50px;">
+											<div class="col-sm-3">
+												<a href="#" class="btn btn-primary" onclick="redirectToSecondPage()">Check-out Order</a>
+											</div>
+											<div class="col-sm-3">
+											<button class="btn btn-primary" onclick="displayValues()">Display Values</button>
+											</div>
+											
+										</div>
 										</div>
 									</div>
 								</div>
+								
 							</div>
 						</div>
 					</div>
@@ -368,129 +272,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-3 col-lg-3 mb-4 text-center">
-						<div class="product-entry border">
-							<a href="#" class="prod-img">
-								<img src="images/item-1.jpg" class="img-fluid" alt="Free html5 bootstrap 4 template">
-							</a>
-							<div class="desc">
-								<h2><a href="#">Women's Boots Shoes Maca</a></h2>
-								<span class="price">$139.00</span>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3 col-lg-3 mb-4 text-center">
-						<div class="product-entry border">
-							<a href="#" class="prod-img">
-								<img src="images/item-2.jpg" class="img-fluid" alt="Free html5 bootstrap 4 template">
-							</a>
-							<div class="desc">
-								<h2><a href="#">Women's Minam Meaghan</a></h2>
-								<span class="price">$139.00</span>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3 col-lg-3 mb-4 text-center">
-						<div class="product-entry border">
-							<a href="#" class="prod-img">
-								<img src="images/item-3.jpg" class="img-fluid" alt="Free html5 bootstrap 4 template">
-							</a>
-							<div class="desc">
-								<h2><a href="#">Men's Taja Commissioner</a></h2>
-								<span class="price">$139.00</span>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3 col-lg-3 mb-4 text-center">
-						<div class="product-entry border">
-							<a href="#" class="prod-img">
-								<img src="images/item-4.jpg" class="img-fluid" alt="Free html5 bootstrap 4 template">
-							</a>
-							<div class="desc">
-								<h2><a href="#">Russ Men's Sneakers</a></h2>
-								<span class="price">$139.00</span>
-							</div>
-						</div>
-					</div>
+				
+					<?php
+						
+                        while($row  = mysqli_fetch_array($qry)){
+                    ?>
+                        <div class="col-md-3 col-lg-3 mb-4 text-center">
+                            <div class="product-entry border">
+                                <a href="product-detail.php? id=<?= $row['ID']; ?>" class="prod-img">
+                                    <?php echo '
+                                    <img src="upload/'.$row['front_image'].'" class="img-fluid" id="image">';?>
+                                </a>
+                                <div class="desc">
+                                    <h2><a href="product-detail.php"><?php echo $row['product_name'];?></a></h2>
+                                    <span class="price"><?php echo 'NGN '. $row['price'];?></span>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    <?php if (mysqli_fetch_row($qry) == 4)  break; } ?>
+					
+				</div>
+					
 				</div>
 			</div>
 		</div>
 
-		<footer id="colorlib-footer" role="contentinfo">
-			<div class="container">
-				<div class="row row-pb-md">
-					<div class="col footer-col colorlib-widget">
-						<h4>About Footwear</h4>
-						<p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
-						<p>
-							<ul class="colorlib-social-icons">
-								<li><a href="#"><i class="icon-twitter"></i></a></li>
-								<li><a href="#"><i class="icon-facebook"></i></a></li>
-								<li><a href="#"><i class="icon-linkedin"></i></a></li>
-								<li><a href="#"><i class="icon-dribbble"></i></a></li>
-							</ul>
-						</p>
-					</div>
-					<div class="col footer-col colorlib-widget">
-						<h4>Customer Care</h4>
-						<p>
-							<ul class="colorlib-footer-links">
-								<li><a href="#">Contact</a></li>
-								<li><a href="#">Returns/Exchange</a></li>
-								<li><a href="#">Gift Voucher</a></li>
-								<li><a href="#">Wishlist</a></li>
-								<li><a href="#">Special</a></li>
-								<li><a href="#">Customer Services</a></li>
-								<li><a href="#">Site maps</a></li>
-							</ul>
-						</p>
-					</div>
-					<div class="col footer-col colorlib-widget">
-						<h4>Information</h4>
-						<p>
-							<ul class="colorlib-footer-links">
-								<li><a href="#">About us</a></li>
-								<li><a href="#">Delivery Information</a></li>
-								<li><a href="#">Privacy Policy</a></li>
-								<li><a href="#">Support</a></li>
-								<li><a href="#">Order Tracking</a></li>
-							</ul>
-						</p>
-					</div>
-
-					<div class="col footer-col">
-						<h4>News</h4>
-						<ul class="colorlib-footer-links">
-							<li><a href="blog.html">Blog</a></li>
-							<li><a href="#">Press</a></li>
-							<li><a href="#">Exhibitions</a></li>
-						</ul>
-					</div>
-
-					<div class="col footer-col">
-						<h4>Contact Information</h4>
-						<ul class="colorlib-footer-links">
-							<li>291 South 21th Street, <br> Suite 721 New York NY 10016</li>
-							<li><a href="tel://1234567920">+ 1235 2355 98</a></li>
-							<li><a href="mailto:info@yoursite.com">info@yoursite.com</a></li>
-							<li><a href="#">yoursite.com</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="copy">
-				<div class="row">
-					<div class="col-sm-12 text-center">
-						<p>
-							<span><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></span> 
-							<span class="block">Demo Images: <a href="http://unsplash.co/" target="_blank">Unsplash</a> , <a href="http://pexels.com/" target="_blank">Pexels.com</a></span>
-						</p>
-					</div>
-				</div>
-			</div>
-		</footer>
+		<?php include 'footer.html'; ?>
 	</div>
 
 	<div class="gototop js-top">
@@ -521,6 +329,119 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<!-- Main -->
 	<script src="js/main.js"></script>
 
-	
+	<script>
+
+		function displayValues(){
+			alert ("You are Welcome");
+		}
+
+		// Function to update session values when input values change
+		function updateSessionValues(productId) {
+        var quantityInput = document.getElementById("quantity_" + productId);
+        var totalInput = document.getElementById("total_" + productId);
+
+        // Update session values
+        ' . $thisProductId . '_quantity = quantityInput.value;
+        ' . $thisProductId . '_total = totalInput.value;
+
+        // Update the session values directly
+        ' . $_SESSION['receipt'][$productId]['quantity'] . ' = ' . $thisProductId . '_quantity;
+        ' . $_SESSION['receipt'][$productId]['total'] . ' = ' . $thisProductId . '_total;
+    }
+
+		function redirectToSecondPage() {
+
+			var totalValue = +document.getElementById('total_copy').value;
+
+			if (totalValue > 0){
+				// Reload the current page
+				location.reload();
+				window.location.href = 'confirm_checkout.php?subtotal=' + encodeURIComponent(totalValue);
+			}else{
+				alert ("Zero Product Added To Your Cart!");
+			}
+		}
+
+
+		// Function to calculate and update the subtotal and total amount
+		function updateTotals() {
+			var subtotal = 0;
+
+			// Loop through each item in the cart
+			<?php if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) : ?>
+				<?php foreach ($_SESSION['cart'] as $product) : ?>
+					var productId = <?php echo $product['id']; ?>;
+					var price = <?php echo $product['price']; ?>;
+					var quantity = +document.getElementById('quantity_' + productId).value;
+
+					// Calculate total for each product and accumulate subtotal
+					var total = price * quantity;
+					subtotal += total;
+				<?php endforeach; ?>
+			<?php endif; ?>
+
+			// Display subtotal and update total after deducting any discounts
+			var discount = 45; // Assuming a fixed discount for the demonstration
+			var total = subtotal - discount;
+
+			// Update the displayed subtotal and total on the page
+			document.getElementById('subtotal').innerText = 'NGN ' + subtotal.toFixed(2); // Update subtotal
+			document.getElementById('total_1').value = 'NGN ' + total.toFixed(2); // Update total
+			document.getElementById('total_copy').value = total.toFixed(2);
+		}
+
+		// Call the function on quantity change to recalculate totals
+		// It seems the `amountValue` function handles quantity changes
+		// Call the updateTotals function inside amountValue function
+		function amountValue(productId) {
+			// Your existing logic to update quantity and total
+			var price = +document.getElementById("price_" + productId).value;
+			var quantityInput = document.getElementById('quantity_' + productId);
+			var totalInput = document.getElementById('total_' + productId);
+
+			// Update the total based on the quantity, assuming some calculation logic
+			var quantityValue = parseInt(quantityInput.value);
+			var calculatedTotal = quantityValue * price /* Your item price or calculation logic */;
+
+			totalInput.value = calculatedTotal ? calculatedTotal : "Amount";
+
+			// Store the values in local storage
+			localStorage.setItem('quantity_' + productId, quantityInput.value);
+			localStorage.setItem('total_' + productId, calculatedTotal);
+
+			// Update session values
+			updateSessionValues(productId);
+
+			// After updating the quantity or total, call the function to update the totals
+			updateTotals();
+		}
+
+		// Call the updateTotals function on page load
+		// window.onload = function() {
+			 // Loop through the input elements to retrieve and set the stored values
+			 var inputs = document.querySelectorAll('input[id^="quantity_"]');
+			inputs.forEach(function(input) {
+				var productId = input.id.split('_')[1];
+				var quantity = localStorage.getItem('quantity_' + productId);
+				var total = localStorage.getItem('total_' + productId);
+
+				// Set the input values if stored values exist
+				if (quantity !== null) {
+					input.value = quantity;
+				}
+
+				// Set the total value if stored value exists
+				var totalInput = document.getElementById('total_' + productId);
+				if (total !== null) {
+					totalInput.value = total;
+				}
+			});
+
+			updateTotals();
+		// }
+	</script>
+	</form>
+	<?php mysqli_close($connect); ?>
 	</body>
 </html>
+

@@ -5,9 +5,9 @@ include 'search.php';
 
 $cart_count = isset($_SESSION["arr_count"]) ? $_SESSION["arr_count"] : 0;
 
-
 function query($retrieve, $connect)
 {
+
 	$qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_connect_error());
 	return $qry;
 }
@@ -26,8 +26,8 @@ function display($retrieve, $detail, $connect)
 						<h2><a href="product-detail.php? id='.$row['ID'].'">'. $row['product_name'] .'</a></h2>
 					<span class="price"> #'. $row['price'] .'</span>
 				</div>
-                <div class="desc">
-						<h2><a href="product-detail.php? id='.$row['ID'].'">'. $detail .'</a></h2>
+				<div class="desc detail">
+				<h2><a href="product-detail.php? id='.$row['ID'].'">'. $detail.'</a></h2>
 				</div>
 			</div>
 		</div>';}
@@ -37,7 +37,7 @@ function display($retrieve, $detail, $connect)
 <!DOCTYPE HTML>
 <html>
 	<head>
-	<title>Kid Page</title>
+	<title>Wrist-Watch Page</title>
 	
 	<?php include 'link.html';?>
 
@@ -46,7 +46,8 @@ function display($retrieve, $detail, $connect)
             width: 100%; /* Set your desired width in pixels */
             height: 300px; /* Set your desired height in pixels */ 
         }
-        .button
+
+		.button
 		{
 			border: none;
 			background-color: transparent;
@@ -55,11 +56,19 @@ function display($retrieve, $detail, $connect)
 		{
 			cursor:pointer;
 		}
+		.detail
+		{
+			margin: 0px 0px 0px 0px;
+		}
+
+        .breadcrumbs-img h2{
+            color: white;
+        }
     </style>
 
 	</head>
 	<body>
-    <form action="" method="post" enctype="multipart/form-data">
+	<form action="" method="post" enctype="multipart/form-data">
 	<div class="colorlib-loader"></div>
 
 	<div id="page">
@@ -70,7 +79,7 @@ function display($retrieve, $detail, $connect)
 			<div class="container">
 				<div class="row">
 					<div class="col">
-						<p class="bread"><span><a href="index.php">Home</a></span> / <span>Kid</span></p>
+						<p class="bread"><span><a href="index.php">Home</a></span> / <span>Wrist-Watch</span></p>
 					</div>
 				</div>
 			</div>
@@ -80,8 +89,8 @@ function display($retrieve, $detail, $connect)
 			<div class="container">
 				<div class="row">
 					<div class="col">
-						<div class="breadcrumbs-img" style="background-image: url(images/about.jpg);">
-							<h2>Kid's</h2>
+						<div class="breadcrumbs-img" style="background-image: url(images/wrist-watch0.jpg);">
+							<h2>Wrist-Watch's</h2>
 						</div>
 					</div>
 				</div>
@@ -100,7 +109,7 @@ function display($retrieve, $detail, $connect)
 									<h3>Brand</h3>
 									<ul>
 									<?php
-									$retrieve = "SELECT DISTINCT product_name FROM footwear_info WHERE product_category = 'kid' ORDER BY product_name";
+									$retrieve = "SELECT DISTINCT product_name FROM footwear_info WHERE product_category = 'men' ORDER BY product_name";
 									$query = query($retrieve, $connect);
 									
                             		while($row  = mysqli_fetch_array($query)){
@@ -108,7 +117,8 @@ function display($retrieve, $detail, $connect)
                         			?>
 										<li><button name="brand" class="button" value="<?= $product;?>"><?= $product; ?></button></li>
 									<?php } ?>
-									</ul>									
+									</ul>
+									
 								</div>
 							</div>
 							<div class="col-sm-12">
@@ -118,7 +128,7 @@ function display($retrieve, $detail, $connect)
 										<h4>Size</h4>
 										<ul>
 										<?php
-											$retrieve = "SELECT DISTINCT size FROM footwear_info WHERE product_category = 'kid' ORDER BY size";
+											$retrieve = "SELECT DISTINCT size FROM footwear_info WHERE product_category = 'men' ORDER BY size";
 											$query = query($retrieve, $connect);
 											
 											while($row  = mysqli_fetch_array($query)){
@@ -135,7 +145,7 @@ function display($retrieve, $detail, $connect)
 									<h3>Style</h3>
 									<ul>
 										<?php
-											$retrieve = "SELECT DISTINCT style FROM footwear_info WHERE product_category = 'kid' ORDER BY style";
+											$retrieve = "SELECT DISTINCT style FROM footwear_info WHERE product_category = 'men' ORDER BY style";
 											$query = query($retrieve, $connect);
 											
 											while($row  = mysqli_fetch_array($query)){
@@ -151,7 +161,7 @@ function display($retrieve, $detail, $connect)
 									<h3>Colors</h3>
 									<ul>
 									<?php
-											$retrieve = "SELECT DISTINCT color FROM footwear_info WHERE product_category = 'kid' ORDER BY color";
+											$retrieve = "SELECT DISTINCT color FROM footwear_info WHERE product_category = 'men' ORDER BY color";
 											$query = query($retrieve, $connect);
 											
 											while($row  = mysqli_fetch_array($query)){
@@ -167,31 +177,30 @@ function display($retrieve, $detail, $connect)
 					<div class="col-lg-9 col-xl-9">
 						<div class="row row-pb-md">
                         <?php
-                            $brand = isset($_POST['brand']) ? $_POST['brand'] : "";
-                            $size = isset($_POST['size']) ? $_POST['size'] : "";
-                            $style = isset($_POST['style']) ? $_POST['style'] : "";
-                            $color = isset($_POST['color']) ? $_POST['color'] : "";
+						$brand = isset($_POST['brand']) ? $_POST['brand'] : "";
+						$size = isset($_POST['size']) ? $_POST['size'] : "";
+						$style = isset($_POST['style']) ? $_POST['style'] : "";
+						$color = isset($_POST['color']) ? $_POST['color'] : "";
 
-                            $retrieve = "SELECT * FROM footwear_info WHERE product_category = 'kid'";
-                            $detail = "";
+						$retrieve = "SELECT * FROM footwear_info WHERE product_category = 'men'";
+						$detail = "";
 
-                            if ($brand) {
-                                $detail .= $brand." Product";
-                                $retrieve .= " AND product_name = '$brand'";
-                            } elseif ($size) {
-                                $detail .= "Size " .$size;
-                                $retrieve .= " AND size = '$size'";
-                            } elseif ($style) {
-                                $detail .= $style." Style";
-                                $retrieve .= " AND style = '$style'";
-                            } elseif ($color) {
-                                $detail .= $color." Color";
-                                $retrieve .= " AND color = '$color'";
-                            }
-                            display($retrieve, $detail, $connect);
+						if ($brand) {
+							$detail .= $brand." Product";
+							$retrieve .= " AND product_name = '$brand'";
+						} elseif ($size) {
+							$detail .= "Size " .$size;
+							$retrieve .= " AND size = '$size'";
+						} elseif ($style) {
+							$detail .= $style." Style";
+							$retrieve .= " AND style = '$style'";
+						} elseif ($color) {
+							$detail .= $color." Color";
+							$retrieve .= " AND color = '$color'";
+						}
+						display($retrieve, $detail, $connect);
 						?>
 						</div>
-                        
 						<div class="row">
 							<div class="col-md-12 text-center">
 								<div class="block-27">
@@ -240,11 +249,6 @@ function display($retrieve, $detail, $connect)
 	<script src="js/jquery.stellar.min.js"></script>
 	<!-- Main -->
 	<script src="js/main.js"></script>
-    </form>
+	</form>
 	</body>
 </html>
-
-<?php mysqli_close($connect);
-	session_destroy(); 
-?>
-

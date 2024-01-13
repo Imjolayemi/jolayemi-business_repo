@@ -1,81 +1,30 @@
 <?php
 session_start();
 
-// if (isset($_POST['add_to_cart"']))
-
-$cart_count = isset($_SESSION["arr_count"]) ? $_SESSION["arr_count"] : 0;
+// Include the database connection
+$connect = include 'database_connection.php';
 
 if (isset($_GET["id"])) {
     $productId = intval($_GET["id"]);
 
-    if (productExistsInCart($productId)) {
-        // Product already exists in the cart
-        echo '<script>alert("This product is already in your cart.");</script>';
-        // Redirect to the quantity input in the cart page
-        echo '<script>window.location = "cart.php#quantity_' . $productId . '";</script>';
-        exit;
-    } else {
-        // Product doesn't exist in the cart, add the product to the cart
-        // Add your logic here to add the product to the cart session array
-		$connect = include 'database_connection.php';
-		$retrieve = "SELECT * FROM footwear_info WHERE ID = $productId";
-		$qry = mysqli_query($connect, $retrieve) or die("Cannot connect to table" . mysqli_connect_error($connect));
+    // Retrieve product information from the database
+    $retrieve = "SELECT * FROM footwear_info WHERE ID = $productId";
+    $qry = mysqli_query($connect, $retrieve) or die("Cannot connect to table" . mysqli_connect_error($connect));
+
+    while ($row = mysqli_fetch_assoc($qry)) {
+        $product_id = $row['ID'];
+        $product_name = $row['product_name'];
+        $product_category = $row['product_category'];
+        $product_price = $row['price'];
+        $product_size = $row['size'];
+        $product_color = $row['color'];
+        $product_front_image = $row['front_image'];
+        $product_back_image = $row['back_image'];
+        $product_style = $row['style'];
     }
-}else{
-	header("Location: index.php");
-	exit();
 }
 
-// if (isset($_GET["id"])){
-// 	$id = $_GET["id"];
-// 	$connect = include 'database_connection.php';
-// 	$retrieve = "SELECT * FROM footwear_info WHERE ID = $id";
-// 	$qry = mysqli_query($connect, $retrieve) or die("Cannot connect to table" . mysqli_connect_error());
-
-// }else{
-// 	header("Location: index.php");
-// 	exit();
-// }
-
-$product = array(
-    'id' => '',
-    'product_name' => '',
-    'product_category' => '',
-    'price' => '',
-    'size' => '',
-    'color' => '',
-    'front_image' => '',
-    'back_image' => '',
-    'style' => ''
-);
-
-while ($row = mysqli_fetch_assoc($qry)) {
-    $product['id'] = $row['ID'];
-    $product['product_name'] = $row['product_name'];
-    $product['product_category'] = $row['product_category'];
-    $product['price'] = $row['price'];
-    $product['size'] = $row['size'];
-    $product['color'] = $row['color'];
-    $product['front_image'] = $row['front_image'];
-    $product['back_image'] = $row['back_image'];
-    $product['style'] = $row['style'];
-}
-
-// Check if the 'cart' session variable is set
-if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
-    // Append the new product to the existing cart array
-    $_SESSION['cart'][] = $product;
-} else {
-    // If the cart doesn't exist, create it and add the product
-    $_SESSION['cart'] = array($product);
-}
-
-$_SESSION["total"] = 0;
-foreach ($_SESSION['cart'] as $product) {
-	$_SESSION["total"] += $product['price'];
-}
-
-// Update the cart count
+$cart_count = isset($_SESSION["arr_count"]) ? $_SESSION["arr_count"] : 0;
 
 // Function to check if a product already exists in the cart
 function productExistsInCart($productId) {
@@ -89,48 +38,66 @@ function productExistsInCart($productId) {
     return false; // Product doesn't exist in the cart
 }
 
+if (isset($_POST['add_to_cart'])) {
+    if (isset($_GET["id"])) {
+        $productId = intval($_GET["id"]);
 
+        if (productExistsInCart($productId)) {
+            // Product already exists in the cart
+            echo '<script>alert("This product is already in your cart.");</script>';
+            // Redirect to the quantity input in the cart page
+            echo '<script>window.location = "cart.php#quantity_' . $productId . '";</script>';
+            exit;
+        } else {
+            // Product doesn't exist in the cart, add the product to the cart
+            // Add your logic here to add the product to the cart session array
+            $product = array(
+                'id' => $product_id,
+                'product_name' => $product_name,
+                'product_category' => $product_category,
+                'price' => $product_price,
+                'size' => $product_size,
+                'color' => $product_color,
+                'front_image' => $product_front_image,
+                'back_image' => $product_back_image,
+                'style' => $product_style
+            );
 
-$_SESSION["arr_count"] = count($_SESSION['cart']);
+            // Check if the 'cart' session variable is set
+            if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
+                // Append the new product to the existing cart array
+                $_SESSION['cart'][] = $product;
+            } else {
+                // If the cart doesn't exist, create it and add the product
+                $_SESSION['cart'] = array($product);
+            }
+
+            $_SESSION["total"] = 0;
+            foreach ($_SESSION['cart'] as $product) {
+                $_SESSION["total"] += $product['price'];
+            }
+
+            // Update the cart count
+            $_SESSION["arr_count"] = count($_SESSION['cart']);
+
+			echo '<script>window.location = "cart.php";</script>';
+            exit;
+        }
+    } else {
+        header("Location: index.php");
+        exit();
+    }
+}
 ?>
+
 
 
 <!DOCTYPE HTML>
 <html>
 	<head>
 	<title>Product Details</title>
-   <meta charset="utf-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
 	
-	<!-- Animate.css -->
-	<link rel="stylesheet" href="css/animate.css">
-	<!-- Icomoon Icon Fonts-->
-	<link rel="stylesheet" href="css/icomoon.css">
-	<!-- Ion Icon Fonts-->
-	<link rel="stylesheet" href="css/ionicons.min.css">
-	<!-- Bootstrap  -->
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-
-	<!-- Magnific Popup -->
-	<link rel="stylesheet" href="css/magnific-popup.css">
-
-	<!-- Flexslider  -->
-	<link rel="stylesheet" href="css/flexslider.css">
-
-	<!-- Owl Carousel -->
-	<link rel="stylesheet" href="css/owl.carousel.min.css">
-	<link rel="stylesheet" href="css/owl.theme.default.min.css">
-	
-	<!-- Date Picker -->
-	<link rel="stylesheet" href="css/bootstrap-datepicker.css">
-	<!-- Flaticons  -->
-	<link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
-
-	<!-- Theme style  -->
-	<link rel="stylesheet" href="css/style.css">
+	<?php include 'link.html';?>
 
 	<style>
         #image{
@@ -144,64 +111,8 @@ $_SESSION["arr_count"] = count($_SESSION['cart']);
 		<form action="" method="post">
 	<div class="colorlib-loader"></div>
 	<div id="page">
-		<nav class="colorlib-nav" role="navigation">
-			<div class="top-menu">
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-7 col-md-9">
-							<div id="colorlib-logo"><a href="index.php">Jolayemi Footwear</a></div>
-						</div>
-						<div class="col-sm-5 col-md-3">
-			            <div class="search-wrap">
-			               <div class="form-group">
-			                  <input type="search" class="form-control search" placeholder="Search">
-			                  <button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
-			               </div>
-			            </div>
-			         </div>
-		         </div>
-					<div class="row">
-						<div class="col-sm-12 text-left menu-1">
-							<ul>
-								<li><a href="index.php">Home</a></li>
-								<li class="has-dropdown">
-									<a href="men.php">Men</a>
-								</li>
-								<li><a href="women.php">Women</a></li>
-                                <li class="has-dropdown">
-									<a href="kid.php">Kids</a>
-								</li>
-								<li><a href="about.php">About</a></li>
-								<li><a href="contact.php">Contact</a></li>
-								<li class="cart"><a href="cart.php"><i class="icon-shopping-cart"></i> Cart [<?= $cart_count; ?>]</a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="sale">
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-8 offset-sm-2 text-center">
-							<div class="row">
-								<div class="owl-carousel2">
-									<div class="item">
-										<div class="col">
-											
-										</div>
-									</div>
-									<div class="item">
-										<div class="col">
-											
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</nav>
+
+	<?php include 'navigation.php';?>
 
 		<div class="breadcrumbs">
 			<div class="container">
@@ -222,14 +133,14 @@ $_SESSION["arr_count"] = count($_SESSION['cart']);
 							<div class="item">
 								<div class="product-entry border">
 									<a href="#" class="prod-img">
-									<img src="upload/<?= $product['front_image']; ?>" class="img-fluid" id="image">
+									<img src="upload/<?= $product_front_image; ?>" class="img-fluid" id="image">
 									</a>
 								</div>
 							</div>
 							<div class="item">
 								<div class="product-entry border">
 									<a href="#" class="prod-img">
-									<img src="upload/<?= $product['back_image']; ?>" class="img-fluid" id="image">
+									<img src="upload/<?= $product_back_image; ?>" class="img-fluid" id="image">
 									</a>
 								</div>
 							</div>
@@ -237,9 +148,9 @@ $_SESSION["arr_count"] = count($_SESSION['cart']);
 					</div>
 					<div class="col-sm-4">
 						<div class="product-desc">
-							<h3><?= $product['product_name']; ?></h3>
+							<h3><?= $product_name; ?></h3>
 							<p class="price">
-								<span><?= "#".$product['price']; ?></span>
+								<span><?= "#".$product_price; ?></span>
 								<span class="rate">
 									<i class="icon-star-full"></i>
 									<i class="icon-star-full"></i>
@@ -254,14 +165,16 @@ $_SESSION["arr_count"] = count($_SESSION['cart']);
 								<div class="block-26 mb-2">
 											<h4>Size</h4>
 									<ul>
-										<li> <?= $product['size']; ?> </li>
+										<li> <?= $product_size; ?> </li>
 									</ul>
 								</div>
 							</div>
 				        </div>
 						<div class="row">
 	                  	<div class="col-sm-12 text-center">
-							<p class="addtocart"><a href="cart.php" class="btn btn-primary btn-addtocart"><i class="icon-shopping-cart"></i>Add to Cart</a></p>
+							<p class="addtocart"><button type="submit" class="btn btn-primary btn-addtocart icon-shopping-cart"  name="add_to_cart" >Add to Cart</button></p> 
+							
+							<!-- <i class="icon-shopping-cart">Add to Cart</i> -->
 						</div>
 					</div>
 					</div>
@@ -442,64 +355,7 @@ $_SESSION["arr_count"] = count($_SESSION['cart']);
 			</div>
 		</div>
 
-		<footer id="colorlib-footer" role="contentinfo">
-			<div class="container">
-				<div class="row row-pb-md">
-					<div class="col footer-col colorlib-widget">
-						<h4>About Our Product</h4>
-						<p>Elevate your style effortlessly with this must-have fashion essential. Find your signature look today</p>
-						<p>
-							<ul class="colorlib-social-icons">
-							<li><a href="#"><i class="icon-twitter"></i></a></li>
-								<li><a href="#"><i class="icon-facebook"></i></a></li>
-								<li><a href="#"><i class="icon-linkedin"></i></a></li>
-								<li><a href="#"><i class="icon-instagram"></i></a></li>
-                                <li><a href="#"><i class="icon-whatsapp"></i></a></li>
-							</ul>
-						</p>
-					</div>
-					<div class="col footer-col colorlib-widget">
-						<h4>Customer Care</h4>
-						<p>
-							<ul class="colorlib-footer-links">
-								<li><a href="#">Contact</a></li>
-								<li><a href="#">Customer Services</a></li>
-							</ul>
-						</p>
-					</div>
-					<div class="col footer-col colorlib-widget">
-						<h4>Information</h4>
-						<p>
-							<ul class="colorlib-footer-links">
-								<li><a href="#">About us</a></li>
-								<li><a href="#">Delivery Information</a></li>
-							</ul>
-						</p>
-					</div>
-
-					<div class="col footer-col">
-						<h4>Contact Information</h4>
-						<ul class="colorlib-footer-links">
-							<li>103 Akindeko hostel, <br> Federal University of Technology Akure(FUTA), <br> Ondo-State, <br> Nigeria.</li>
-							<li><a href="#">+2348130906009</a></li>
-							<li><a href="#">jolayemiempire@gmail.com</a></li>
-							<li><a href="#">yoursite.com</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			
-			<div class="copy">
-				<div class="row">
-					<div class="col-sm-12 text-center">
-						<p>
-							<span><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This website is design by Jolayemi</a>
-						</p>
-					</div>
-				</div>
-			</div>
-		</footer>
+		<?php include 'footer.html'; ?>
 	</div>
 
 	<div class="gototop js-top">
@@ -530,7 +386,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<!-- Main -->
 	<script src="js/main.js"></script>
 
-	<script>
+	<!-- <script>
 		$(document).ready(function(){
 
 		var quantitiy=0;
@@ -564,9 +420,10 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		            }
 		    });
 		    
-		}); <?php mysqli_close($connect); ?>
-	</script>
+		}); 
+	</script> -->
 	</form>
+	<?php mysqli_close($connect); ?>
 	</body>
 </html>
 

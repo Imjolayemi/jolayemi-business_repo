@@ -1,9 +1,3 @@
-/* function amountValue(id) {
-    var price = +document.getElementById("price_" + id).value;
-    var qty = +document.getElementById("quantity_" + id).value;
-    document.getElementById("total_" + id).value = price * qty;
-}
- */
 
 
 // Function to handle the change in input and store the value in local storage

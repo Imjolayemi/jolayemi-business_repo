@@ -1,55 +1,49 @@
 <?php
 // Start the session to access session variables
 session_start();
+include 'database_connection.php';
+include 'search.php';
+
 $cart_count = isset($_SESSION["arr_count"]) ? $_SESSION["arr_count"] : 0;
+
+$_SESSION['total_copy'] = "";
 
 
 // var_dump($_SESSION);
 // print "<br>________________<br>";
 
-$connect = include 'database_connection.php';
+
 $retrieve = "SELECT * FROM footwear_info";
 $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_connect_error($connect));
+
+
+// echo '
+// <script>
+// var products = ' . json_encode($_SESSION['receipt']) . ';
+
+    
+//     for (var productId in products) {
+//         if (products.hasOwnProperty(productId)) {
+//             var product = products[productId];
+// 			if ( product.quantity == null){
+// 				continue
+// 			}
+// 			else{
+//             alert("Product Name: " + product.product_name +
+//                   "\\nQuantity: " + product.quantity +
+//                   "\\nPrice: " + product.price +
+//                   "\\nTotal: " + product.total);
+// 			}
+//         }
+//     } </script>';
 
 ?>
 <!DOCTYPE HTML>
 <html>
 	<head>
 	<title>Jolayemi Footwear - Cart Page</title>
-   <meta charset="utf-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	
 
-
-	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
-	
-	<!-- Animate.css -->
-	<link rel="stylesheet" href="css/animate.css">
-	<!-- Icomoon Icon Fonts-->
-	<link rel="stylesheet" href="css/icomoon.css">
-	<!-- Ion Icon Fonts-->
-	<link rel="stylesheet" href="css/ionicons.min.css">
-	<!-- Bootstrap  -->
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-
-	<!-- Magnific Popup -->
-	<link rel="stylesheet" href="css/magnific-popup.css">
-
-	<!-- Flexslider  -->
-	<link rel="stylesheet" href="css/flexslider.css">
-
-	<!-- Owl Carousel -->
-	<link rel="stylesheet" href="css/owl.carousel.min.css">
-	<link rel="stylesheet" href="css/owl.theme.default.min.css">
-	
-	<!-- Date Picker -->
-	<link rel="stylesheet" href="css/bootstrap-datepicker.css">
-	<!-- Flaticons  -->
-	<link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
-
-	<!-- Theme style  -->
-	<link rel="stylesheet" href="css/style.css">
+	<?php include 'link.html';?>
 
 	<style>
         #image{
@@ -60,9 +54,7 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
 			background: none;
 			border: none;
 		}
-    </style>
 
-	<style>
         table {
             border-collapse: collapse;
             width: 100%;
@@ -77,6 +69,28 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
         th {
             background-color: #f2f2f2;
         }
+
+		.qty_box0{
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding-top: 2em;
+		}
+
+		.qty_box1{
+			display: flex;
+			flex-wrap: wrap;
+			flex-direction: row;
+			/* align-items: center; */
+			/* background-color: grey; */
+		}
+		.qty_box1 button{
+			display: flex;
+			flex-wrap: wrap;
+			margin: 0;
+			border: none;
+			margin-left: 0; 
+		}
     </style>
 
 	</head>
@@ -84,60 +98,8 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
 	<form action="cart.php" method="post" enctype="multipart/form-data">
 	<div class="colorlib-loader"></div>
 	<div id="page">
-		<nav class="colorlib-nav" role="navigation">
-			<div class="top-menu">
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-7 col-md-9">
-							<div id="colorlib-logo"><a href="index.html">Jolayemi Footwear</a></div>
-						</div>
-						<div class="col-sm-5 col-md-3">
-			            <div class="search-wrap">
-			               <div class="form-group">
-			                  <input type="search" class="form-control search" placeholder="Search">
-			                  <button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
-			               </div>
-						</div>
-			         </div>
-		         </div>
-					<div class="row">
-						<div class="col-sm-12 text-left menu-1">
-							<ul>
-								<li><a href="index.php">Home</a></li>
-								<li class="has-dropdown">
-									<a href="men.php">Men</a>
-									<ul class="dropdown">
-										<li><a href="product-detail.php">Product Detail</a></li>
-										<li><a href="cart.php">Shopping Cart</a></li>
-										<li><a href="checkout.php">Checkout</a></li>
-										<li><a href="order-complete.php">Order Complete</a></li>
-										<li><a href="add-to-wishlist.php">Wishlist</a></li>
-									</ul>
-								</li>
-								<li><a href="women.php">Women</a></li>
-								<li><a href="kid.php">Kids</a></li>
-								<li><a href="about.php">About</a></li>
-								<li><a href="contact.php">Contact</a></li>
-								<li class="cart"><a href="cart.html"><i class="icon-shopping-cart"></i> Cart [<?= $cart_count; ?>]</a></li>
-								</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="sale">
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-8 offset-sm-2 text-center">
-							<div class="row">
-								<div class="owl-carousel2">
-			
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</nav>
+
+	<?php include 'navigation.php';?>
 
 		<div class="breadcrumbs">
 			<div class="container">
@@ -193,48 +155,100 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
 						<?php
 						// Check if the necessary session variables are set
 						if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
-							foreach ($_SESSION['cart'] as $product) {
-								$productId = $product['id'];
-								
-							// Display the product details using the session variables
-							echo '
-								<div class="product-cart d-flex">
-								<div class="one-forth">
-									<div class="product-img" style="background-image: url(upload/' . $product['front_image'] . ');"></div>
-									<div class="display-tc">
-									<h3>' . $product['product_name'] . '</h3>
-									</div>
-								</div>
-								<div class="one-eight text-center">
-									<div class="display-tc">
-										<input type="text" name="price_' . $productId . '" id="price_' . $productId . '" class="form-control input-number text-center" value="' . $product['price'] . '" readonly>
-									</div>
-								</div>
-								<div class="one-eight text-center">
-									<div class="display-tc">
-										<input type="text" id="quantity_' . $productId . '" name="quantity_' . $productId . '" class="form-control input-number text-center" oninput="amountValue(' . $productId . ')" >
-									</div>
-								</div>
-								<div class="one-eight text-center">
-									<div class="display-tc">
-										<input type="text" name="total_' . $productId . '" id="total_' . $productId . '" class="form-control input-number text-center" placeholder="Amount" readonly>
-									</div>
-								</div>
-								<div class="one-eight text-center">
-									<div class="display-tc">
-									<a href="delete_page.php?remove_id=' . $productId . '" class="closed"></a>
-									</div>
-								</div>
-								</div>
-								';
 
+							if (empty($_SESSION['cart'])) {
+								echo '<p>No product details found in the session.</p>';
+							}else{
+								foreach ($_SESSION['cart'] as $product) {
+									$productId = $product['id'];
+
+									 
+									
+									// Display the product details using the session variables
+									echo '
+									<div class="product-cart d-flex">
+									<div class="one-forth">
+										<div class="product-img" style="background-image: url(upload/' . $product['front_image'] . ');"></div>
+										<div class="display-tc">
+										<h3>' . $product['product_name'] . '</h3>
+										</div>
+									</div>
+									<div class="one-eight text-center">
+										<div class="display-tc">
+											<input type="text" name="price_' . $productId . '" id="price_' . $productId . '" class="form-control input-number text-center" value="' . $product['price'] . '" readonly>
+										
+										</div>
+									</div>
+									<div class="one-eight text-center qty_box0">
+										<div class="display qty_box1">
+											<input type="text" id="quantity_' . $productId . '" name="quantity_' . $productId . '" class="form-control input-number text-center" oninput="amountValue(' . $productId . ')" >
+											<button href="#" class="">SET</button>
+										</div>
+									</div>
+									<div class="one-eight text-center">
+										<div class="display-tc">
+											<input type="text" name="total_' . $productId . '" id="total_' . $productId . '" class="form-control input-number text-center" placeholder="Amount" readonly>
+										</div>
+									</div>
+									<div class="one-eight text-center">
+										<div class="display-tc">
+										<a href="delete_page.php?remove_id=' . $productId . '" class="closed"></a>
+										</div>
+									</div>
+									</div>
+									';
+
+									// $_SESSION['receipt'][$productId]['product_name'] = $product['product_name'];
+									// $_SESSION['receipt'][$productId]['quantity'] = $_POST['quantity_' . $productId];
+									// $_SESSION['receipt'][$productId]['price'] = $product['price'];
+									// $_SESSION['receipt'][$productId]['total'] = $_POST['total_' . $productId];
+
+									// Retrieve values from local storage
+									$quantityKey = 'quantity_' . $productId;
+									$totalKey = 'total_' . $productId;
+						
+									// Set default values to zero if not found
+									$quantity = isset($_POST[$quantityKey]) ? $_POST[$quantityKey] : (isset($_SESSION['receipt'][$productId]['quantity']) ? $_SESSION['receipt'][$productId]['quantity'] : 1);
+									$total = isset($_POST[$totalKey]) ? $_POST[$totalKey] : (isset($_SESSION['receipt'][$productId]['total']) ? $_SESSION['receipt'][$productId]['total'] : 1);
+						
+									// Assign values to session variables
+									$_SESSION['receipt'][$productId]['product_name'] = $product['product_name'];
+									$_SESSION['receipt'][$productId]['quantity'] = $quantity;
+									$_SESSION['receipt'][$productId]['price'] = $product['price'];
+									$_SESSION['receipt'][$productId]['total'] = $total;
+								}
+								
 							}
-						} else {
+							
+						}else {
 							echo '<p>No product details found in the session.</p>';
 						}
-						?> 
 
-				<div class="row row-pb-lg">
+
+// 						echo '
+// <script>
+// var products = ' . json_encode($_SESSION['receipt']) . ';
+
+    
+//     for (var productId in products) {
+//         if (products.hasOwnProperty(productId)) {
+//             var product = products[productId];
+// 			if ( product.quantity == null){
+// 				continue
+// 			}
+// 			else{
+//             alert("Product Name: " + product.product_name +
+//                   "\\nQuantity: " + product.quantity +
+//                   "\\nPrice: " + product.price +
+//                   "\\nTotal: " + product.total);
+// 			}
+//         }
+//     }
+
+// </script>
+// ';
+						?> 
+						<div class="row row-pb-lg">
 					<div class="col-md-12">
 						<div class="total-wrap">
 							<div class="row">
@@ -256,15 +270,25 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
 										
 										<div class="grand-total">
 											<p><span><strong>Total:</strong></span><span id=""><input type="text" name="total_1" id="total_1" readonly></span></p>
-											<input type="hidden" name="total_1" id="total_copy" readonly>
+											<input type="hidden" name="total_copy" id="total_copy" readonly>
 
 										</div>
 										<div class="sub"></div>
 										<div class="col-sm-8">
 										<div class="row form-group" style="margin: Auto 50px;">
 											<div class="col-sm-3">
-												<a href="#" class="btn btn-primary" onclick="redirectToSecondPage()">Check-out Order</a>
+
+												<a href="#" class="btn btn-primary" onclick="redirectToSecondPage()" id="nextButton">Check Out Order</a>
+
 											</div>
+
+											<div class="col-sm-3">
+												<!-- <button class="btn btn-primary" onclick="redirectToSecondPage()" id="nextButton">Check Out Order </button> -->
+
+												<!-- <button class="btn btn-primary" onclick="displayValues()">Confirm Order</button> -->
+											</div>
+
+											
 										</div>
 										</div>
 									</div>
@@ -307,64 +331,7 @@ $qry = mysqli_query($connect, $retrieve) or die("Cannot insert to table".mysqli_
 			</div>
 		</div>
 
-		<footer id="colorlib-footer" role="contentinfo">
-			<div class="container">
-				<div class="row row-pb-md">
-					<div class="col footer-col colorlib-widget">
-						<h4>About Our Product</h4>
-						<p>Elevate your style effortlessly with this must-have fashion essential. Find your signature look today</p>
-						<p>
-							<ul class="colorlib-social-icons">
-							<li><a href="#"><i class="icon-twitter"></i></a></li>
-								<li><a href="#"><i class="icon-facebook"></i></a></li>
-								<li><a href="#"><i class="icon-linkedin"></i></a></li>
-								<li><a href="#"><i class="icon-instagram"></i></a></li>
-                                <li><a href="#"><i class="icon-whatsapp"></i></a></li>
-							</ul>
-						</p>
-					</div>
-					<div class="col footer-col colorlib-widget">
-						<h4>Customer Care</h4>
-						<p>
-							<ul class="colorlib-footer-links">
-								<li><a href="#">Contact</a></li>
-								<li><a href="#">Customer Services</a></li>
-							</ul>
-						</p>
-					</div>
-					<div class="col footer-col colorlib-widget">
-						<h4>Information</h4>
-						<p>
-							<ul class="colorlib-footer-links">
-								<li><a href="#">About us</a></li>
-								<li><a href="#">Delivery Information</a></li>
-							</ul>
-						</p>
-					</div>
-
-					<div class="col footer-col">
-						<h4>Contact Information</h4>
-						<ul class="colorlib-footer-links">
-							<li>103 Akindeko hostel, <br> Federal University of Technology Akure(FUTA), <br> Ondo-State, <br> Nigeria.</li>
-							<li><a href="#">+2348130906009</a></li>
-							<li><a href="#">jolayemiempire@gmail.com</a></li>
-							<li><a href="#">yoursite.com</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			
-			<div class="copy">
-				<div class="row">
-					<div class="col-sm-12 text-center">
-						<p>
-							<span><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This website is design by Jolayemi</a>
-						</p>
-					</div>
-				</div>
-			</div>
-		</footer>
+		<?php include 'footer.html'; ?>
 	</div>
 
 	<div class="gototop js-top">
@@ -397,11 +364,57 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 	<script>
 
-		function redirectToSecondPage() {
-			var totalValue = document.getElementById('total_copy').value;
-			window.location.href = 'confirm_checkout.php?subtotal=' + encodeURIComponent(totalValue);
-		}
+function displayValues() {
+    alert("You are Welcome");
 
+    // Hide the confirmation button
+    document.getElementById('confirmationButton').style.display = 'none';
+
+    // Show the checkout button
+    document.getElementById('nextButton').style.display = 'inline-block';
+}
+
+function redirectToSecondPage() {
+    var totalValue = +document.getElementById('total_copy').value;
+
+    if (totalValue > 0) {
+
+        // Reload the current page
+		window.location.href = 'confirm_checkout.php?subtotal=' + encodeURIComponent(totalValue);
+    } else {
+        alert("Zero Product Added To Your Cart!");
+    }
+	
+}
+
+
+
+
+		
+		
+// 		function redirectToSecondPage() {
+//     var totalValue = +document.getElementById('total_copy').value;
+
+//     if (totalValue > 0) {
+//         // console.log("Display Values function is called");
+//         alert("You are Welcome");
+
+//         // // Hide the confirmation button
+//         // document.getElementById('confirmationButton').style.display = 'none';
+
+//         // // Show the checkout button
+//         // document.getElementById('nextButton').style.display = 'inline-block';
+
+//         // // Perform any additional logic for checkout
+//         // console.log("Performing Checkout");
+
+//         // Reload the current page or redirect to the checkout page
+//         // You can customize this based on your requirements
+// 		window.location = 'checkout.php?subtotal=' + encodeURIComponent(totalValue);
+//     } else {
+//         alert("Zero Product Added To Your Cart!");
+//     }
+// }
 
 		// Function to calculate and update the subtotal and total amount
 		function updateTotals() {
